@@ -4746,14 +4746,6 @@
                             </select>
                         </div>
 
-                        <div class="detail-option-group" id="optCollar">
-                            <label>👔 Collar Type</label>
-                            <div class="toggle-chip-row">
-                                <button class="toggle-chip selected" onclick="pickToggle(this)">Standard Collar</button>
-                                <button class="toggle-chip" onclick="pickToggle(this)">Mandarin Collar</button>
-                            </div>
-                        </div>
-
                         <div class="detail-option-group" id="optSize">
                             <label>📏 Size</label>
                             <div class="size-chip-row" id="detailSizeRow">
@@ -5640,20 +5632,18 @@
                     { name: 'Corporate Shirt (Beige)', icon: '👔', qty: 45, threshold: 10 },
                     { name: 'Corporate Shirt (Black)', icon: '👔', qty: 32, threshold: 10 },
                     { name: 'Technical Uniform (Grey)', icon: '🦺', qty: 18, threshold: 15 },
-                    { name: 'Technical Uniform (Orange)', icon: '🦺', qty: 8, threshold: 15 },
-                    { name: 'Polo Shirt', icon: '👕', qty: 52, threshold: 10 },
-                    { name: 'Power To Grow Round Neck', icon: '👕', qty: 27, threshold: 10 }
+                    { name: 'Technical Uniform (Orange)', icon: '🦺', qty: 22, threshold: 15 }
                 ];
 
-                const glCodeMap = { 'SEB Testing Team': '02026 - Testing', 'Engineering Dept': '03041 - Engineering', 'Corporate Services': '04012 - Corp Services', 'Operations': '05088 - Operations' };
+                const glCodeMap = { 'SEB Testing Team': '02026 - Tester', 'Engineering Dept': '01001 - Engineering', 'Corporate Services': '03003 - Corp', 'Operations': '04004 - Ops' };
 
                 const products = [
-                    { id: 'tech-grey', name: 'Technical Uniform (Grey)', icon: '👔', category: 'Technical Uniform', identifier: 'Technical Uniform Type A', options: { size: true, sleeve: false, sleeveSelect: true, collar: true, colour: true, hem: false, name: true, gender: true, noOfPair: true, delivery: true, pants: true }, colours: [{ name: 'Grey', hex: '#b0a898' }, { name: 'Dark Grey', hex: '#666' }, { name: 'Charcoal', hex: '#444' }], svg: `<svg viewBox="0 0 120 150"><polygon points="60,5 30,25 10,20 5,50 20,55 20,145 100,145 100,55 115,50 110,20 90,25" fill="#b0a898" stroke="#8a8070" stroke-width="1.5"/><polygon points="60,5 45,15 45,40 75,40 75,15" fill="#a09888" stroke="#8a8070" stroke-width="1"/></svg>` },
-                    { id: 'tech-orange', name: 'Technical Uniform (Orange)', icon: '🦺', category: 'Technical Uniform', identifier: 'Technical Uniform Type B', options: { size: true, sleeve: false, sleeveSelect: true, collar: true, colour: true, hem: false, name: true, gender: true, noOfPair: true, delivery: true, pants: true }, colours: [{ name: 'Orange', hex: '#e85d15' }, { name: 'Neon', hex: '#ff6600' }], svg: `<svg viewBox="0 0 120 150"><polygon points="60,5 20,25 5,20 0,55 15,55 15,145 105,145 105,55 120,55 115,20 100,25" fill="#e85d15" stroke="#c44d10" stroke-width="1.5"/><rect x="5" y="85" width="110" height="8" rx="2" fill="#c0c0c0" opacity="0.6"/></svg>` },
-                    { id: 'corp-beige', name: 'Corporate Shirt (Beige)', icon: '👕', category: 'Corporate Shirt', identifier: 'Corporate Beige Executive', options: { size: true, sleeve: false, sleeveSelect: true, collar: true, colour: true, hem: true, name: true, gender: true, noOfPair: true, delivery: true, pants: false }, colours: [{ name: 'Beige', hex: '#d9d0bb' }, { name: 'Cream', hex: '#f5f0e0' }], svg: `<svg viewBox="0 0 120 150"><polygon points="60,5 30,25 10,20 5,50 20,55 20,145 100,145 100,55 115,50 110,20 90,25" fill="#d9d0bb" stroke="#b8af9a" stroke-width="1.5"/><polygon points="60,5 48,12 52,50 60,55 68,50 72,12" fill="#cec5b0" stroke="#b8af9a" stroke-width="1"/></svg>` },
-                    { id: 'corp-black', name: 'Corporate Shirt (Black)', icon: '👔', category: 'Corporate Shirt', identifier: 'Corporate Black Executive', options: { size: true, sleeve: false, sleeveSelect: true, collar: true, colour: true, hem: true, name: true, gender: true, noOfPair: true, delivery: true, pants: false }, colours: [{ name: 'Black', hex: '#4d4d4d' }, { name: 'Charcoal', hex: '#333' }], svg: `<svg viewBox="0 0 120 150"><polygon points="60,5 30,25 10,20 5,50 20,55 20,145 100,145 100,55 115,50 110,20 90,25" fill="#4d4d4d" stroke="#333" stroke-width="1.5"/><polygon points="60,5 48,12 52,50 60,55 68,50 72,12" fill="#444" stroke="#333" stroke-width="1"/></svg>` },
+                    { id: 'tech-grey', name: 'Technical Uniform (Grey)', icon: '👔', category: 'Technical Uniform', identifier: 'Technical Uniform Type A', options: { size: true, sleeve: false, sleeveSelect: true, collar: false, colour: true, hem: false, name: true, gender: true, noOfPair: true, delivery: true, pants: true }, colours: [{ name: 'Grey', hex: '#b0a898' }, { name: 'Dark Grey', hex: '#666' }, { name: 'Charcoal', hex: '#444' }], svg: `<svg viewBox="0 0 120 150"><polygon points="60,5 30,25 10,20 5,50 20,55 20,145 100,145 100,55 115,50 110,20 90,25" fill="#b0a898" stroke="#8a8070" stroke-width="1.5"/><polygon points="60,5 45,15 45,40 75,40 75,15" fill="#a09888" stroke="#8a8070" stroke-width="1"/></svg>` },
+                    { id: 'tech-orange', name: 'Technical Uniform (Orange)', icon: '🦺', category: 'Technical Uniform', identifier: 'Technical Uniform Type B', options: { size: true, sleeve: false, sleeveSelect: true, collar: false, colour: true, hem: false, name: true, gender: true, noOfPair: true, delivery: true, pants: true }, colours: [{ name: 'Orange', hex: '#e85d15' }, { name: 'Neon', hex: '#ff6600' }], svg: `<svg viewBox="0 0 120 150"><polygon points="60,5 20,25 5,20 0,55 15,55 15,145 105,145 105,55 120,55 115,20 100,25" fill="#e85d15" stroke="#c44d10" stroke-width="1.5"/><rect x="5" y="85" width="110" height="8" rx="2" fill="#c0c0c0" opacity="0.6"/></svg>` },
+                    { id: 'corp-beige', name: 'Corporate Shirt (Beige)', icon: '👕', category: 'Corporate Shirt', identifier: 'Corporate Beige Executive', options: { size: true, sleeve: false, sleeveSelect: true, collar: false, colour: true, hem: true, name: true, gender: true, noOfPair: true, delivery: true, pants: false }, colours: [{ name: 'Beige', hex: '#d9d0bb' }, { name: 'Cream', hex: '#f5f0e0' }], svg: `<svg viewBox="0 0 120 150"><polygon points="60,5 30,25 10,20 5,50 20,55 20,145 100,145 100,55 115,50 110,20 90,25" fill="#d9d0bb" stroke="#b8af9a" stroke-width="1.5"/><polygon points="60,5 48,12 52,50 60,55 68,50 72,12" fill="#cec5b0" stroke="#b8af9a" stroke-width="1"/></svg>` },
+                    { id: 'corp-black', name: 'Corporate Shirt (Black)', icon: '👔', category: 'Corporate Shirt', identifier: 'Corporate Black Executive', options: { size: true, sleeve: false, sleeveSelect: true, collar: false, colour: true, hem: true, name: true, gender: true, noOfPair: true, delivery: true, pants: false }, colours: [{ name: 'Black', hex: '#4d4d4d' }, { name: 'Charcoal', hex: '#333' }], svg: `<svg viewBox="0 0 120 150"><polygon points="60,5 30,25 10,20 5,50 20,55 20,145 100,145 100,55 115,50 110,20 90,25" fill="#4d4d4d" stroke="#333" stroke-width="1.5"/><polygon points="60,5 48,12 52,50 60,55 68,50 72,12" fill="#444" stroke="#333" stroke-width="1"/></svg>` },
                     { id: 'ptg-round', name: 'Power To Grow Round Neck', icon: '👕', category: 'PTG/Polo', identifier: 'PTG Round Neck', options: { size: true, sleeve: false, sleeveSelect: false, collar: false, colour: true, hem: false, name: false, gender: false, noOfPair: true, delivery: true, pants: false }, colours: [{ name: 'Black', hex: '#2a2a2a' }, { name: 'Navy', hex: '#1a1a3e' }], svg: `<svg viewBox="0 0 120 150"><polygon points="60,10 30,25 10,20 5,50 20,55 20,145 100,145 100,55 115,50 110,20 90,25" fill="#2a2a2a" stroke="#1a1a1a" stroke-width="1.5"/><ellipse cx="60" cy="12" rx="15" ry="8" fill="#333" stroke="#1a1a1a" stroke-width="1.5"/></svg>` },
-                    { id: 'polo', name: 'Polo Shirt', icon: '👔', category: 'PTG/Polo', identifier: 'Polo Smart Casual', options: { size: true, sleeve: false, sleeveSelect: false, collar: true, colour: true, hem: true, name: false, gender: false, noOfPair: true, delivery: true, pants: false }, colours: [{ name: 'Navy', hex: '#1a1a2e' }, { name: 'Black', hex: '#222' }], svg: `<svg viewBox="0 0 120 150"><polygon points="60,5 30,25 10,20 5,50 20,55 20,145 100,145 100,55 115,50 110,20 90,25" fill="#1a1a2e" stroke="#111122" stroke-width="1.5"/><rect x="45" y="8" width="30" height="10" rx="2" fill="#2d2d44"/></svg>` }
+                    { id: 'polo', name: 'Polo Shirt', icon: '👔', category: 'PTG/Polo', identifier: 'Polo Smart Casual', options: { size: true, sleeve: false, sleeveSelect: false, collar: false, colour: true, hem: true, name: false, gender: false, noOfPair: true, delivery: true, pants: false }, colours: [{ name: 'Navy', hex: '#1a1a2e' }, { name: 'Black', hex: '#222' }], svg: `<svg viewBox="0 0 120 150"><polygon points="60,5 30,25 10,20 5,50 20,55 20,145 100,145 100,55 115,50 110,20 90,25" fill="#1a1a2e" stroke="#111122" stroke-width="1.5"/><rect x="45" y="8" width="30" height="10" rx="2" fill="#2d2d44"/></svg>` }
                 ];
 
                 const starterKits = {
@@ -6099,7 +6089,6 @@
                     document.getElementById('optSize').style.display = opts.size ? 'block' : 'none';
                     document.getElementById('optPantSize').style.display = opts.pants ? 'block' : 'none';
                     document.getElementById('optPantLength').style.display = opts.pants ? 'block' : 'none';
-                    document.getElementById('optCollar').style.display = opts.collar ? 'block' : 'none';
                     document.getElementById('optColour').style.display = opts.colour ? 'block' : 'none';
                     document.getElementById('optHem').style.display = opts.hem ? 'block' : 'none';
                     document.getElementById('optQty').style.display = opts.qty ? 'block' : 'none';
@@ -6161,7 +6150,6 @@
                     const gender = opts.gender ? document.getElementById('detailGender').value : '';
                     const noOfPair = opts.noOfPair ? parseInt(document.getElementById('detailNoOfPair').value) : detailQty;
                     const sleeve = opts.sleeveSelect ? document.getElementById('detailSleeveSelect').value : (opts.sleeve ? (document.getElementById('optSleeveToggle').querySelector('.toggle-chip.selected')?.textContent || '') : '');
-                    const collar = opts.collar ? (document.getElementById('optCollar').querySelector('.toggle-chip.selected')?.textContent || '') : '';
                     const colour = opts.colour ? (document.querySelector('#detailColourRow .colour-swatch.selected')?.title || '') : '';
                     const hem = opts.hem ? document.getElementById('detailHemLength').value : '';
                     const nameOnShirt = opts.name ? document.getElementById('detailNameOnShirt').value.trim() : '';
@@ -6175,7 +6163,7 @@
                         icon: detailProduct.icon,
                         size: detailSize,
                         quantity: noOfPair,
-                        gender, sleeve, collar, colour, hem, nameOnShirt, deliveryLocation, pantSize, pantLength
+                        gender, sleeve, colour, hem, nameOnShirt, deliveryLocation, pantSize, pantLength
                     };
 
                     cart.push(item);
@@ -6201,7 +6189,6 @@
                         if (i.colour) meta += ` | ${i.colour}`;
                         if (i.gender) meta += ` | ${i.gender}`;
                         if (i.sleeve) meta += `<br><small>${i.sleeve}</small>`;
-                        if (i.collar) meta += `<br><small>Collar: ${i.collar}</small>`;
                         if (i.pantSize) meta += `<br><small>Pant: ${i.pantSize} / ${i.pantLength}"</small>`;
                         if (i.deliveryLocation) meta += `<br><small>📍 ${i.deliveryLocation}</small>`;
                         return `<div class="drawer-item"><div class="drawer-item-icon">${i.icon}</div><div class="drawer-item-info"><div class="drawer-item-name">${i.product}</div><div class="drawer-item-meta">${meta}</div></div><button class="drawer-item-del" onclick="removeItem(${i.id})">🗑️</button></div>`;
@@ -6214,7 +6201,6 @@
                         if (item.colour) meta.push(`Colour: ${item.colour}`);
                         if (item.gender) meta.push(`Gender: ${item.gender}`);
                         if (item.sleeve) meta.push(`Sleeve: ${item.sleeve}`);
-                        if (item.collar) meta.push(`Collar: ${item.collar}`);
                         if (item.pantSize) meta.push(`Pant: ${item.pantSize}" / ${item.pantLength}"`);
                         if (item.deliveryLocation) meta.push(`📍 ${item.deliveryLocation}`);
                         
