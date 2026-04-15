@@ -1434,8 +1434,12 @@
 
         .detail-layout {
             display: flex;
-            gap: 35px;
+            gap: 40px;
             align-items: flex-start;
+            padding: 20px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
         }
 
         .detail-image-area {
@@ -1444,16 +1448,17 @@
 
         .detail-main-image {
             width: 320px;
-            height: 360px;
+            height: 380px;
             border: 2px solid #e0e0e0;
-            border-radius: 10px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: #fafafa;
             overflow: hidden;
-            margin-bottom: 12px;
+            margin-bottom: 20px;
             position: relative;
+            transition: border-color 0.3s;
         }
 
         .detail-main-image .placeholder-svg {
@@ -1555,8 +1560,33 @@
             display: none;
         }
 
-        .detail-options {
+        .detail-info-area {
             flex: 1;
+            max-height: 750px;
+            overflow-y: auto;
+            padding-right: 15px;
+        }
+
+        /* Custom Scrollbar for Info Area */
+        .detail-info-area::-webkit-scrollbar {
+            width: 6px;
+        }
+        .detail-info-area::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .detail-info-area::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 10px;
+        }
+        .detail-info-area::-webkit-scrollbar-thumb:hover {
+            background: #999;
+        }
+
+        .detail-options {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
         }
 
         .detail-option-group {
@@ -4649,117 +4679,137 @@
                 <div class="detail-image-area">
                     <div class="detail-main-image" id="detailMainImage">
                         <div id="detailMainPlaceholder"></div>
+                    </div>
+                    <div class="detail-thumbnails" id="detailThumbnails"></div>
+                    <div class="detail-footer" style="margin-top:20px;">
+                        <button class="btn-detail-back" onclick="navigateTo('shirtList')">← Back</button>
+                        <button class="btn-detail-add" onclick="addToCartFromDetail()">🛒 Add to Cart</button>
+                    </div>
+                </div>
 
-                        <div class="detail-options">
-                            <div class="detail-identifier"><strong>Uniform Identifier:</strong> <span
-                                    id="detailIdText"></span>
-                            </div>
-                            <div class="detail-option-group" id="optNameOnShirt"><label>📝 Name On Shirt</label><input
-                                    type="text" id="detailNameOnShirt" placeholder="Enter name"
-                                    style="width:100%;max-width:300px;padding:9px 12px;border:2px solid #ddd;border-radius:6px;font-size:13px;outline:none;"
-                                    onfocus="this.style.borderColor='#2196F3'" onblur="this.style.borderColor='#ddd'">
-                            </div>
+                <div class="detail-info-area">
+                    <div class="detail-options">
+                        <div class="detail-identifier"><strong>Uniform Identifier:</strong> <span id="detailIdText"></span></div>
+                        
+                        <div class="detail-option-group" id="optNameOnShirt">
+                            <label>📝 Name On Shirt</label>
+                            <input type="text" id="detailNameOnShirt" placeholder="Enter name"
+                                style="width:100%;max-width:300px;padding:9px 12px;border:2px solid #ddd;border-radius:6px;font-size:13px;outline:none;"
+                                onfocus="this.style.borderColor='#2196F3'" onblur="this.style.borderColor='#ddd'">
+                        </div>
 
-                            <div class="detail-option-group" id="optGender"><label>👤 Gender</label>
-                                <select id="detailGender" class="hem-select" style="max-width: 150px;">
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                </select>
-                            </div>
+                        <div class="detail-option-group" id="optGender">
+                            <label>👤 Gender</label>
+                            <select id="detailGender" class="hem-select" style="max-width: 150px;">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
 
-                            <div class="detail-option-group" id="optNoOfPair"><label>🔢 No of Pair</label>
-                                <select id="detailNoOfPair" class="hem-select" style="max-width: 80px;">
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                </select>
-                            </div>
+                        <div class="detail-option-group" id="optNoOfPair">
+                            <label>🔢 No of Pair</label>
+                            <select id="detailNoOfPair" class="hem-select" style="max-width: 80px;">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        </div>
 
-                            <div class="detail-option-group" id="optSleeveSelect"><label>👔 Sleeve Type</label>
-                                <select id="detailSleeveSelect" class="hem-select" style="max-width: 250px;">
-                                    <option value="Male Short Sleeve">Male Short Sleeve</option>
-                                    <option value="Male Long Sleeve">Male Long Sleeve</option>
-                                    <option value="Female Short Sleeve">Female Short Sleeve</option>
-                                    <option value="Female Long Sleeve">Female Long Sleeve</option>
-                                </select>
-                            </div>
+                        <div class="detail-option-group" id="optSleeveSelect">
+                            <label>👔 Sleeve Type</label>
+                            <select id="detailSleeveSelect" class="hem-select" style="max-width: 250px;">
+                                <option value="Male Short Sleeve">Male Short Sleeve</option>
+                                <option value="Male Long Sleeve">Male Long Sleeve</option>
+                                <option value="Female Short Sleeve">Female Short Sleeve</option>
+                                <option value="Female Long Sleeve">Female Long Sleeve</option>
+                            </select>
+                        </div>
 
-                            <div class="detail-option-group" id="optSleeveToggle" style="display:none;"><label>👔
-                                    Sleeve</label>
-                                <div class="toggle-chip-row"><button class="toggle-chip selected"
-                                        onclick="pickToggle(this)">Short Sleeve</button><button class="toggle-chip"
-                                        onclick="pickToggle(this)">Long Sleeve</button></div>
+                        <div class="detail-option-group" id="optSleeveToggle" style="display:none;">
+                            <label>👔 Sleeve</label>
+                            <div class="toggle-chip-row">
+                                <button class="toggle-chip selected" onclick="pickToggle(this)">Short Sleeve</button>
+                                <button class="toggle-chip" onclick="pickToggle(this)">Long Sleeve</button>
                             </div>
+                        </div>
 
-                            <div class="detail-option-group" id="optDeliveryLocation"><label>📍 Delivery Location</label>
-                                <select id="detailDeliveryLocation" class="hem-select" style="max-width: 100%;">
-                                    <option value="SARAWAK ENERGY BERHAD MENARA SARAWAK ENERGY">SARAWAK ENERGY BERHAD MENARA SARAWAK ENERGY</option>
-                                    <option value="KUCHING REGIONAL OFFICE">KUCHING REGIONAL OFFICE</option>
-                                    <option value="SIBU REGIONAL OFFICE">SIBU REGIONAL OFFICE</option>
-                                    <option value="BINTULU REGIONAL OFFICE">BINTULU REGIONAL OFFICE</option>
-                                    <option value="MIRI REGIONAL OFFICE">MIRI REGIONAL OFFICE</option>
-                                </select>
+                        <div class="detail-option-group" id="optDeliveryLocation">
+                            <label>📍 Delivery Location</label>
+                            <select id="detailDeliveryLocation" class="hem-select" style="max-width: 100%;">
+                                <option value="SARAWAK ENERGY BERHAD MENARA SARAWAK ENERGY">SARAWAK ENERGY BERHAD MENARA SARAWAK ENERGY</option>
+                                <option value="KUCHING REGIONAL OFFICE">KUCHING REGIONAL OFFICE</option>
+                                <option value="SIBU REGIONAL OFFICE">SIBU REGIONAL OFFICE</option>
+                                <option value="BINTULU REGIONAL OFFICE">BINTULU REGIONAL OFFICE</option>
+                                <option value="MIRI REGIONAL OFFICE">MIRI REGIONAL OFFICE</option>
+                            </select>
+                        </div>
+
+                        <div class="detail-option-group" id="optCollar">
+                            <label>👔 Collar Type</label>
+                            <div class="toggle-chip-row">
+                                <button class="toggle-chip selected" onclick="pickToggle(this)">Standard Collar</button>
+                                <button class="toggle-chip" onclick="pickToggle(this)">Mandarin Collar</button>
                             </div>
+                        </div>
 
-                            <div class="detail-option-group" id="optCollar"><label>👔 Collar Type</label>
-                                <div class="toggle-chip-row">
-                                    <button class="toggle-chip selected" onclick="pickToggle(this)">Standard Collar</button>
-                                    <button class="toggle-chip" onclick="pickToggle(this)">Mandarin Collar</button>
-                                </div>
+                        <div class="detail-option-group" id="optSize">
+                            <label>📏 Size</label>
+                            <div class="size-chip-row" id="detailSizeRow">
+                                <button class="size-chip" onclick="pickDetailSize(this,'XS')">XS</button>
+                                <button class="size-chip" onclick="pickDetailSize(this,'S')">S</button>
+                                <button class="size-chip" onclick="pickDetailSize(this,'M')">M</button>
+                                <button class="size-chip" onclick="pickDetailSize(this,'L')">L</button>
+                                <button class="size-chip" onclick="pickDetailSize(this,'XL')">XL</button>
+                                <button class="size-chip" onclick="pickDetailSize(this,'XXL')">XXL</button>
+                                <button class="size-chip" onclick="pickDetailSize(this,'3XL')">3XL</button>
+                                <button class="size-chip" onclick="pickDetailSize(this,'4XL')">4XL</button>
+                                <button class="size-chip" onclick="pickDetailSize(this,'5XL')">5XL</button>
+                                <button class="size-chip" onclick="pickDetailSize(this,'6XL')">6XL</button>
                             </div>
+                        </div>
 
-                            <div class="detail-option-group" id="optSize"><label>📏 Size</label>
-                                <div class="size-chip-row" id="detailSizeRow"><button class="size-chip"
-                                        onclick="pickDetailSize(this,'XS')">XS</button><button class="size-chip"
-                                        onclick="pickDetailSize(this,'S')">S</button><button class="size-chip"
-                                        onclick="pickDetailSize(this,'M')">M</button><button class="size-chip"
-                                        onclick="pickDetailSize(this,'L')">L</button><button class="size-chip"
-                                        onclick="pickDetailSize(this,'XL')">XL</button><button class="size-chip"
-                                        onclick="pickDetailSize(this,'XXL')">XXL</button><button class="size-chip"
-                                        onclick="pickDetailSize(this,'3XL')">3XL</button><button class="size-chip"
-                                        onclick="pickDetailSize(this,'4XL')">4XL</button><button class="size-chip"
-                                        onclick="pickDetailSize(this,'5XL')">5XL</button><button class="size-chip"
-                                        onclick="pickDetailSize(this,'6XL')">6XL</button></div>
-                            </div>
+                        <div class="detail-option-group" id="optPantSize">
+                            <label>👖 Pant Size (Inches)</label>
+                            <div class="size-chip-row" id="detailPantSizeRow"></div>
+                        </div>
 
-                            <div class="detail-option-group" id="optPantSize"><label>👖 Pant Size (Inches)</label>
-                                <div class="size-chip-row" id="detailPantSizeRow"></div>
-                            </div>
+                        <div class="detail-option-group" id="optPantLength">
+                            <label>📏 Pants Length (Inches)</label>
+                            <input type="text" id="detailPantLength" placeholder="e.g. 31.5"
+                                style="width:100%;max-width:150px;padding:9px 12px;border:2px solid #ddd;border-radius:6px;font-size:13px;outline:none;"
+                                onfocus="this.style.borderColor='#2196F3'" onblur="this.style.borderColor='#ddd'">
+                        </div>
 
-                            <div class="detail-option-group" id="optPantLength"><label>📏 Pants Length (Inches)</label>
-                                <input type="text" id="detailPantLength" placeholder="e.g. 31.5"
-                                    style="width:100%;max-width:150px;padding:9px 12px;border:2px solid #ddd;border-radius:6px;font-size:13px;outline:none;"
-                                    onfocus="this.style.borderColor='#2196F3'" onblur="this.style.borderColor='#ddd'">
-                            </div>
+                        <div class="detail-option-group" id="optColour">
+                            <label>🎨 Colour</label>
+                            <div class="colour-swatch-row" id="detailColourRow"></div>
+                        </div>
 
+                        <div class="detail-option-group" id="optHem">
+                            <label>📐 Hem</label>
+                            <select class="hem-select" id="detailHemLength">
+                                <option value="">-- Select --</option>
+                                <option value="standard">Standard</option>
+                                <option value="short">Short</option>
+                                <option value="long">Long</option>
+                            </select>
+                        </div>
 
-                            <div class="detail-option-group" id="optColour"><label>🎨 Colour</label>
-                                <div class="colour-swatch-row" id="detailColourRow"></div>
-                            </div>
-                            <div class="detail-option-group" id="optHem"><label>📐 Hem</label><select class="hem-select"
-                                    id="detailHemLength">
-                                    <option value="">-- Select --</option>
-                                    <option value="standard">Standard</option>
-                                    <option value="short">Short</option>
-                                    <option value="long">Long</option>
-                                </select></div>
-                            <div class="detail-option-group" id="optQty" style="display:none;"><label>🔢
-                                    Quantity</label>
-                                <div class="detail-qty-row"><button class="detail-qty-btn"
-                                        onclick="chgDetailQty(-1)">−</button><span class="detail-qty-val"
-                                        id="detailQtyVal">1</span><button class="detail-qty-btn"
-                                        onclick="chgDetailQty(1)">+</button></div>
+                        <div class="detail-option-group" id="optQty" style="display:none;">
+                            <label>🔢 Quantity</label>
+                            <div class="detail-qty-row">
+                                <button class="detail-qty-btn" onclick="chgDetailQty(-1)">−</button>
+                                <span class="detail-qty-val" id="detailQtyVal">1</span>
+                                <button class="detail-qty-btn" onclick="chgDetailQty(1)">+</button>
                             </div>
                         </div>
                     </div>
-                    <div class="detail-footer"><button class="btn-detail-back" onclick="navigateTo('shirtList')">←
-                            Back</button><button class="btn-detail-add" onclick="addToCartFromDetail()">🛒 Add to
-                            Cart</button>
-                    </div>
                 </div>
             </div>
+        </div>
+
 
             <!-- REVIEW & SUBMIT -->
             <div class="page" id="pageReviewForm">
