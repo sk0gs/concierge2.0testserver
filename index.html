@@ -4627,6 +4627,15 @@
                         placeholder="email@sarawakenergy.com"></div>
             </div>
             <hr class="divider">
+            <div class="section-title">Remarks</div>
+            <div class="form-row">
+                <div class="form-group" style="flex:2;"><label>Remarks / Special Instructions</label><textarea
+                        id="njRemarks" placeholder="Any additional notes..." rows="2"
+                        style="width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:6px;font-size:14px;font-family:inherit;outline:none;resize:vertical;"
+                        onfocus="this.style.borderColor='#4CAF50'" onblur="this.style.borderColor='#ddd'"></textarea>
+                </div>
+            </div>
+            <hr class="divider">
             <div class="section-title">Cost Allocation</div>
             <div class="cost-section"><button class="pill-btn active" onclick="pill(this)">Cost Center</button><button
                     class="pill-btn" onclick="pill(this)">WBS/IO</button>
@@ -4673,6 +4682,8 @@
         <div class="detail-category-bar" id="detailCategoryBar">Shirt Category</div>
         <div class="cart-badge" id="cartBadgeDetail" onclick="openDrawer()">🛒<span class="cart-count-badge"
                 id="cartCountBadgeDetail">0</span></div>
+        <!-- Hidden file input for image uploads -->
+        <input type="file" id="mainImageUpload" accept="image/*" style="display:none;" onchange="handleImageUpload(event)">
         <div class="detail-container">
             <h2 class="detail-title" id="detailTitle"></h2>
             <div class="detail-layout">
@@ -4689,8 +4700,9 @@
 
                 <div class="detail-info-area">
                     <div class="detail-options">
-                        <div class="detail-identifier"><strong>Uniform Identifier:</strong> <span id="detailIdText"></span></div>
-                        
+                        <div class="detail-identifier"><strong>Uniform Identifier:</strong> <span
+                                id="detailIdText"></span></div>
+
                         <div class="detail-option-group" id="optNameOnShirt">
                             <label>📝 Name On Shirt</label>
                             <input type="text" id="detailNameOnShirt" placeholder="Enter name"
@@ -4738,7 +4750,8 @@
                         <div class="detail-option-group" id="optDeliveryLocation">
                             <label>📍 Delivery Location</label>
                             <select id="detailDeliveryLocation" class="hem-select" style="max-width: 100%;">
-                                <option value="SARAWAK ENERGY BERHAD MENARA SARAWAK ENERGY">SARAWAK ENERGY BERHAD MENARA SARAWAK ENERGY</option>
+                                <option value="SARAWAK ENERGY BERHAD MENARA SARAWAK ENERGY">SARAWAK ENERGY BERHAD MENARA
+                                    SARAWAK ENERGY</option>
                                 <option value="KUCHING REGIONAL OFFICE">KUCHING REGIONAL OFFICE</option>
                                 <option value="SIBU REGIONAL OFFICE">SIBU REGIONAL OFFICE</option>
                                 <option value="BINTULU REGIONAL OFFICE">BINTULU REGIONAL OFFICE</option>
@@ -4801,766 +4814,764 @@
                 </div>
             </div>
         </div>
+    </div><!-- FIX: Properly closed pageShirtDetail -->
 
-
-            <!-- REVIEW & SUBMIT -->
-            <div class="page" id="pageReviewForm">
-                <div class="form-banner">
-                    <h1>Review & Submit Request</h1>
-                    <p>Step 3: Review your details and order</p>
+    <!-- REVIEW & SUBMIT -->
+    <div class="page" id="pageReviewForm">
+        <div class="form-banner">
+            <h1>Review & Submit Request</h1>
+            <p>Step 3: Review your details and order</p>
+        </div>
+        <div class="form-container">
+            <div class="form-progress">
+                <div class="fp-step done">
+                    <div class="fp-circle">✓</div>
+                    <div class="fp-label">Details</div>
                 </div>
-                <div class="form-container">
-                    <div class="form-progress">
-                        <div class="fp-step done">
-                            <div class="fp-circle">✓</div>
-                            <div class="fp-label">Details</div>
-                        </div>
-                        <div class="fp-line done"></div>
-                        <div class="fp-step done">
-                            <div class="fp-circle">✓</div>
-                            <div class="fp-label">Select</div>
-                        </div>
-                        <div class="fp-line done"></div>
-                        <div class="fp-step active">
-                            <div class="fp-circle">3</div>
-                            <div class="fp-label">Review</div>
-                        </div>
-                    </div>
-                    <div class="particulars-summary" id="reviewPS">
-                        <h3>✅ Requestor Particulars</h3>
-                        <div class="ps-grid" id="reviewPsGrid"></div><button class="btn-edit-particulars"
-                            onclick="navigateTo('existingForm')">✏️ Edit</button>
-                    </div>
-                    <div class="order-box">
-                        <div class="order-head">
-                            <h3>🛒 Order Summary</h3><span class="order-count" id="orderCount">0</span>
-                        </div>
-                        <table class="order-tbl">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Item</th>
-                                    <th>Size</th>
-                                    <th>Qty</th>
-                                </tr>
-                            </thead>
-                            <tbody id="orderBody"></tbody>
-                        </table>
-                        <div style="text-align:right;margin-top:10px;"><button class="btn-edit"
-                                onclick="navigateTo('shirtList')">✏️ Edit</button></div>
-                    </div>
-                    <div class="footer-actions"><button class="btn-back-form" onclick="navigateTo('shirtList')">←
-                            Back</button><button class="btn-save-draft" onclick="saveDraft()">Save Draft</button><button
-                            class="btn-submit-us" onclick="handleExistingStaffSubmit()">Submit Request U&S</button>
+                <div class="fp-line done"></div>
+                <div class="fp-step done">
+                    <div class="fp-circle">✓</div>
+                    <div class="fp-label">Select</div>
+                </div>
+                <div class="fp-line done"></div>
+                <div class="fp-step active">
+                    <div class="fp-circle">3</div>
+                    <div class="fp-label">Review</div>
+                </div>
+            </div>
+            <div class="particulars-summary" id="reviewPS">
+                <h3>✅ Requestor Particulars</h3>
+                <div class="ps-grid" id="reviewPsGrid"></div><button class="btn-edit-particulars"
+                    onclick="navigateTo('existingForm')">✏️ Edit</button>
+            </div>
+            <div class="order-box">
+                <div class="order-head">
+                    <h3>🛒 Order Summary</h3><span class="order-count" id="orderCount">0</span>
+                </div>
+                <table class="order-tbl">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Item</th>
+                            <th>Size</th>
+                            <th>Qty</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orderBody"></tbody>
+                </table>
+                <div style="text-align:right;margin-top:10px;"><button class="btn-edit"
+                        onclick="navigateTo('shirtList')">✏️ Edit</button></div>
+            </div>
+            <div class="footer-actions"><button class="btn-back-form" onclick="navigateTo('shirtList')">←
+                    Back</button><button class="btn-save-draft" onclick="saveDraft()">Save Draft</button><button
+                    class="btn-submit-us" onclick="handleExistingStaffSubmit()">Submit Request U&S</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHECKOUT (New Joiner) -->
+    <div class="page" id="pageCheckout">
+        <div class="checkout-page-label" id="checkoutLabel">Checkout Page (New Joiner)</div>
+        <div class="checkout-header">
+            <h1>New Joiner Starter Kit Checkout</h1>
+        </div>
+        <div class="checkout-main">
+            <div class="checkout-top" id="checkoutTop">
+                <div class="section-box">
+                    <h3>A. New Joiner Information</h3>
+                    <div class="employee-info"><span class="elabel">Name</span><span class="evalue"
+                            id="empName">—</span><span class="elabel">Gender</span><span class="evalue"
+                            id="empGender">—</span><span class="elabel">Department</span><span class="evalue"
+                            id="empDept">—</span><span class="elabel">Region</span><span class="evalue"
+                            id="empRegion">—</span><span class="elabel">Manager</span><span class="evalue"
+                            id="empManager">—</span><span class="elabel">Requested By</span><span class="evalue"
+                            id="empRequestedBy">—</span><span class="elabel">Contact</span><span class="evalue"
+                            id="empContact">—</span></div>
+                </div>
+                <div class="section-box" id="starterKitSection">
+                    <h3>B. Recommended Starter Kit</h3>
+                    <div class="starter-kit-box" id="starterKitBox"></div><button class="auto-add-btn"
+                        id="autoAddBtn" onclick="autoAddToCart()">Auto Add to Cart</button>
+                </div>
+            </div>
+            <div class="section-box" style="margin-bottom:20px;">
+                <h3>C. Request Type</h3>
+                <div
+                    style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#e8f5e9;border-radius:8px;">
+                    <span style="font-size:20px;">🆕</span><span
+                        style="font-size:14px;font-weight:600;color:#2e7d32;" id="checkoutTypeLabel">New
+                        Joiner</span>
+                </div>
+                <div class="no-approval-badge" style="margin-top:15px;">
+                    <div class="badge-icon">✓</div>
+                    <div class="badge-text">
+                        <h4>No Approval Required</h4>
+                        <p>Auto-routed to PIC based on location</p>
                     </div>
                 </div>
             </div>
+            <div class="submit-section"><button class="btn-back-form" onclick="navigateTo('newJoinerForm')"
+                    style="margin-right:12px;">← Edit Details</button><button class="submit-btn"
+                    id="checkoutSubmitBtn" onclick="submitCheckoutRequest()">Submit Request</button></div>
+        </div>
+    </div>
 
-            <!-- CHECKOUT (New Joiner) -->
-            <div class="page" id="pageCheckout">
-                <div class="checkout-page-label" id="checkoutLabel">Checkout Page (New Joiner)</div>
-                <div class="checkout-header">
-                    <h1>New Joiner Starter Kit Checkout</h1>
+    <!-- ============ LINE MANAGER PAGE ============ -->
+    <div class="page" id="pageLMDashboard">
+        <div class="form-banner lm-banner">
+            <h1>👨‍💼 Line Manager's Dashboard</h1>
+            <p>Review and approve/reject uniform requisition requests from your team</p>
+        </div>
+        <div class="mgr-dashboard">
+            <div class="mgr-stats">
+                <div class="mgr-stat-card pending-card">
+                    <div class="mgr-stat-icon">⏳</div>
+                    <div class="mgr-stat-val" id="lmPending">0</div>
+                    <div class="mgr-stat-label">Pending Review</div>
                 </div>
-                <div class="checkout-main">
-                    <div class="checkout-top" id="checkoutTop">
-                        <div class="section-box">
-                            <h3>A. New Joiner Information</h3>
-                            <div class="employee-info"><span class="elabel">Name</span><span class="evalue"
-                                    id="empName">—</span><span class="elabel">Gender</span><span class="evalue"
-                                    id="empGender">—</span><span class="elabel">Department</span><span class="evalue"
-                                    id="empDept">—</span><span class="elabel">Region</span><span class="evalue"
-                                    id="empRegion">—</span><span class="elabel">Manager</span><span class="evalue"
-                                    id="empManager">—</span><span class="elabel">Requested By</span><span class="evalue"
-                                    id="empRequestedBy">—</span><span class="elabel">Contact</span><span class="evalue"
-                                    id="empContact">—</span></div>
-                        </div>
-                        <div class="section-box" id="starterKitSection">
-                            <h3>B. Recommended Starter Kit</h3>
-                            <div class="starter-kit-box" id="starterKitBox"></div><button class="auto-add-btn"
-                                id="autoAddBtn" onclick="autoAddToCart()">Auto Add to Cart</button>
-                        </div>
-                    </div>
-                    <div class="section-box" style="margin-bottom:20px;">
-                        <h3>C. Request Type</h3>
-                        <div
-                            style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#e8f5e9;border-radius:8px;">
-                            <span style="font-size:20px;">🆕</span><span
-                                style="font-size:14px;font-weight:600;color:#2e7d32;" id="checkoutTypeLabel">New
-                                Joiner</span>
-                        </div>
-                        <div class="no-approval-badge" style="margin-top:15px;">
-                            <div class="badge-icon">✓</div>
-                            <div class="badge-text">
-                                <h4>No Approval Required</h4>
-                                <p>Auto-routed to PIC based on location</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="submit-section"><button class="btn-back-form" onclick="navigateTo('newJoinerForm')"
-                            style="margin-right:12px;">← Edit Details</button><button class="submit-btn"
-                            id="checkoutSubmitBtn" onclick="submitCheckoutRequest()">Submit Request</button></div>
+                <div class="mgr-stat-card approved-card">
+                    <div class="mgr-stat-icon">✅</div>
+                    <div class="mgr-stat-val" id="lmApproved">0</div>
+                    <div class="mgr-stat-label">Approved</div>
+                </div>
+                <div class="mgr-stat-card rejected-card">
+                    <div class="mgr-stat-icon">❌</div>
+                    <div class="mgr-stat-val" id="lmRejected">0</div>
+                    <div class="mgr-stat-label">Rejected</div>
+                </div>
+                <div class="mgr-stat-card total-card">
+                    <div class="mgr-stat-icon">📊</div>
+                    <div class="mgr-stat-val" id="lmTotal">0</div>
+                    <div class="mgr-stat-label">Total Requests</div>
                 </div>
             </div>
-
-            <!-- ============ LINE MANAGER PAGE ============ -->
-            <div class="page" id="pageLMDashboard">
-                <div class="form-banner lm-banner">
-                    <h1>👨‍💼 Line Manager's Dashboard</h1>
-                    <p>Review and approve/reject uniform requisition requests from your team</p>
-                </div>
-                <div class="mgr-dashboard">
-                    <div class="mgr-stats">
-                        <div class="mgr-stat-card pending-card">
-                            <div class="mgr-stat-icon">⏳</div>
-                            <div class="mgr-stat-val" id="lmPending">0</div>
-                            <div class="mgr-stat-label">Pending Review</div>
-                        </div>
-                        <div class="mgr-stat-card approved-card">
-                            <div class="mgr-stat-icon">✅</div>
-                            <div class="mgr-stat-val" id="lmApproved">0</div>
-                            <div class="mgr-stat-label">Approved</div>
-                        </div>
-                        <div class="mgr-stat-card rejected-card">
-                            <div class="mgr-stat-icon">❌</div>
-                            <div class="mgr-stat-val" id="lmRejected">0</div>
-                            <div class="mgr-stat-label">Rejected</div>
-                        </div>
-                        <div class="mgr-stat-card total-card">
-                            <div class="mgr-stat-icon">📊</div>
-                            <div class="mgr-stat-val" id="lmTotal">0</div>
-                            <div class="mgr-stat-label">Total Requests</div>
-                        </div>
-                    </div>
-                    <div class="mgr-queue-card">
-                        <h2>📋 Pending Approval Queue <span class="badge" id="lmQueueBadge">0</span></h2>
-                        <div id="lmQueueList"></div>
-                    </div>
-                    <div class="mgr-queue-card">
-                        <h2>📜 Action History</h2>
-                        <div id="lmHistoryList">
-                            <div class="history-empty">
-                                <div class="history-empty-icon">📭</div>
-                                <p>No actions taken yet.</p>
-                            </div>
-                        </div>
+            <div class="mgr-queue-card">
+                <h2>📋 Pending Approval Queue <span class="badge" id="lmQueueBadge">0</span></h2>
+                <div id="lmQueueList"></div>
+            </div>
+            <div class="mgr-queue-card">
+                <h2>📜 Action History</h2>
+                <div id="lmHistoryList">
+                    <div class="history-empty">
+                        <div class="history-empty-icon">📭</div>
+                        <p>No actions taken yet.</p>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <!-- LINE MANAGER DETAIL VIEW -->
-            <div class="page" id="pageLMDetail">
-                <div class="form-banner lm-banner">
-                    <h1>👨‍💼 Line Manager's Page</h1>
-                    <p>Review requestor details and approve or reject</p>
+    <!-- LINE MANAGER DETAIL VIEW -->
+    <div class="page" id="pageLMDetail">
+        <div class="form-banner lm-banner">
+            <h1>👨‍💼 Line Manager's Page</h1>
+            <p>Review requestor details and approve or reject</p>
+        </div>
+        <div class="form-container">
+            <div class="lm-own-behalf-toggle">
+                <button class="lm-toggle-btn active" id="lmOwnBtn">Own</button>
+                <button class="lm-toggle-btn" id="lmBehalfBtn">On-Behalf</button>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group"><label>Name</label><input type="text" id="lmName" readonly></div>
+                <div class="form-group"><label>Manager's Name</label><select id="lmManager" disabled>
+                        <option>Tester Line Manager</option>
+                    </select></div>
+                <div class="form-group"><label>Staff No.</label><input type="text" id="lmStaffNo" readonly>
                 </div>
-                <div class="form-container">
-                    <div class="lm-own-behalf-toggle">
-                        <button class="lm-toggle-btn active" id="lmOwnBtn">Own</button>
-                        <button class="lm-toggle-btn" id="lmBehalfBtn">On-Behalf</button>
-                    </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Supervisor Name</label><select id="lmSupervisor" disabled>
+                        <option>Supervisor Tester</option>
+                    </select></div>
+                <div class="form-group"><label>Gender</label><select id="lmGender" disabled>
+                        <option>Male</option>
+                        <option>Female</option>
+                    </select></div>
+                <div class="form-group"><label>Entitlement</label>
+                    <div class="entitlement-group" style="margin-top:6px;"><button class="pill-btn"
+                            id="lmEntReplace">Replacement</button><button class="pill-btn active" id="lmEntNeed">On
+                            need
+                            basis</button></div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Designation</label>
+                    <div class="static-text" id="lmDesignation">Supervisor</div>
+                </div>
+                <div class="form-group"><label>Department</label>
+                    <div class="static-text" id="lmDept">Test Team</div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Region</label>
+                    <div class="static-text" id="lmRegion">Menara SEB - HQ</div>
+                </div>
+                <div class="form-group"><label>GL Code</label>
+                    <div class="static-text" id="lmGLCode">02026 - Tester</div>
+                </div>
+                <div class="form-group"><label>Contact No</label><input type="text" id="lmContact" readonly>
+                </div>
+            </div>
+            <div class="cost-section">
+                <button class="pill-btn active">Cost Center</button><button class="pill-btn">WBS/IO</button>
+                <div class="cost-select"><select disabled>
+                        <option>SEB Testing Team</option>
+                    </select></div>
+                <div class="form-group" style="flex:1;min-width:200px;margin-bottom:0;"><select disabled>
+                        <option>00XXXXXX</option>
+                    </select></div>
+            </div>
+            <hr class="divider">
+            <div class="section-title">Service Request Details</div>
+            <div class="service-toggle">
+                <button class="pill-btn" id="lmSvcDelivery">Delivery</button>
+                <button class="pill-btn active" id="lmSvcPickup">Self Pick-up</button>
+            </div>
 
-                    <div class="form-row">
-                        <div class="form-group"><label>Name</label><input type="text" id="lmName" readonly></div>
-                        <div class="form-group"><label>Manager's Name</label><select id="lmManager" disabled>
-                                <option>Tester Line Manager</option>
-                            </select></div>
-                        <div class="form-group"><label>Staff No.</label><input type="text" id="lmStaffNo" readonly>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group"><label>Supervisor Name</label><select id="lmSupervisor" disabled>
-                                <option>Supervisor Tester</option>
-                            </select></div>
-                        <div class="form-group"><label>Gender</label><select id="lmGender" disabled>
-                                <option>Male</option>
-                                <option>Female</option>
-                            </select></div>
-                        <div class="form-group"><label>Entitlement</label>
-                            <div class="entitlement-group" style="margin-top:6px;"><button class="pill-btn"
-                                    id="lmEntReplace">Replacement</button><button class="pill-btn active"
-                                    id="lmEntNeed">On need
-                                    basis</button></div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group"><label>Designation</label>
-                            <div class="static-text" id="lmDesignation">Supervisor</div>
-                        </div>
-                        <div class="form-group"><label>Department</label>
-                            <div class="static-text" id="lmDept">Test Team</div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group"><label>Region</label>
-                            <div class="static-text" id="lmRegion">Menara SEB - HQ</div>
-                        </div>
-                        <div class="form-group"><label>GL Code</label>
-                            <div class="static-text" id="lmGLCode">02026 - Tester</div>
-                        </div>
-                        <div class="form-group"><label>Contact No</label><input type="text" id="lmContact" readonly>
-                        </div>
-                    </div>
-                    <div class="cost-section">
-                        <button class="pill-btn active">Cost Center</button><button class="pill-btn">WBS/IO</button>
-                        <div class="cost-select"><select disabled>
-                                <option>SEB Testing Team</option>
-                            </select></div>
-                        <div class="form-group" style="flex:1;min-width:200px;margin-bottom:0;"><select disabled>
-                                <option>00XXXXXX</option>
-                            </select></div>
-                    </div>
-                    <hr class="divider">
-                    <div class="section-title">Service Request Details</div>
-                    <div class="service-toggle">
-                        <button class="pill-btn" id="lmSvcDelivery">Delivery</button>
-                        <button class="pill-btn active" id="lmSvcPickup">Self Pick-up</button>
-                    </div>
+            <div class="order-box" id="lmOrderBox" style="margin-top:15px;">
+                <div class="order-head">
+                    <h3>🛒 Items Requested</h3><span class="order-count" id="lmOrderCount">0</span>
+                </div>
+                <table class="order-tbl">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Item</th>
+                            <th>Size</th>
+                            <th>Colour</th>
+                            <th>Qty</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lmOrderBody"></tbody>
+                </table>
+            </div>
 
-                    <div class="order-box" id="lmOrderBox" style="margin-top:15px;">
-                        <div class="order-head">
-                            <h3>🛒 Items Requested</h3><span class="order-count" id="lmOrderCount">0</span>
-                        </div>
-                        <table class="order-tbl">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Item</th>
-                                    <th>Size</th>
-                                    <th>Colour</th>
-                                    <th>Qty</th>
-                                </tr>
-                            </thead>
-                            <tbody id="lmOrderBody"></tbody>
-                        </table>
-                    </div>
+            <div class="lm-action-bar">
+                <button class="lm-btn-back" onclick="navigateTo('lmDashboard')">← Back</button>
+                <button class="lm-btn-reject" onclick="openRejectModal('lm')">✕ Reject</button>
+                <button class="lm-btn-approve" onclick="approveRequest('lm')">Approve</button>
+            </div>
+        </div>
+    </div>
 
-                    <div class="lm-action-bar">
-                        <button class="lm-btn-back" onclick="navigateTo('lmDashboard')">← Back</button>
-                        <button class="lm-btn-reject" onclick="openRejectModal('lm')">✕ Reject</button>
-                        <button class="lm-btn-approve" onclick="approveRequest('lm')">Approve</button>
+    <!-- ============ EXECUTIVE PAGE ============ -->
+    <div class="page" id="pageExecDashboard">
+        <div class="form-banner exec-banner">
+            <h1>👩‍💻 Executive (Admin) Dashboard</h1>
+            <p>Manage all requests, approve/reject and assign Regional PICs</p>
+        </div>
+        <div class="mgr-dashboard">
+            <div class="mgr-stats">
+                <div class="mgr-stat-card pending-card">
+                    <div class="mgr-stat-icon">⏳</div>
+                    <div class="mgr-stat-val" id="execPending">0</div>
+                    <div class="mgr-stat-label">Pending Review</div>
+                </div>
+                <div class="mgr-stat-card approved-card">
+                    <div class="mgr-stat-icon">✅</div>
+                    <div class="mgr-stat-val" id="execApproved">0</div>
+                    <div class="mgr-stat-label">Approved & Assigned</div>
+                </div>
+                <div class="mgr-stat-card rejected-card">
+                    <div class="mgr-stat-icon">❌</div>
+                    <div class="mgr-stat-val" id="execRejected">0</div>
+                    <div class="mgr-stat-label">Rejected</div>
+                </div>
+                <div class="mgr-stat-card total-card">
+                    <div class="mgr-stat-icon">📊</div>
+                    <div class="mgr-stat-val" id="execTotal">0</div>
+                    <div class="mgr-stat-label">Total Processed</div>
+                </div>
+            </div>
+            <div class="mgr-queue-card">
+                <h2>📋 Requests Queue <span class="badge" id="execQueueBadge">0</span></h2>
+                <div id="execQueueList"></div>
+            </div>
+            <div class="mgr-queue-card">
+                <h2>📜 Action History</h2>
+                <div id="execHistoryList">
+                    <div class="history-empty">
+                        <div class="history-empty-icon">📭</div>
+                        <p>No actions taken yet.</p>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <!-- ============ EXECUTIVE PAGE ============ -->
-            <div class="page" id="pageExecDashboard">
-                <div class="form-banner exec-banner">
-                    <h1>👩‍💻 Executive (Admin) Dashboard</h1>
-                    <p>Manage all requests, approve/reject and assign Regional PICs</p>
+    <!-- EXECUTIVE DETAIL VIEW -->
+    <div class="page" id="pageExecDetail">
+        <div class="form-banner exec-banner">
+            <h1>👩‍💻 Executive - Request Review & PIC Assignment</h1>
+            <p>Review details, approve/reject, and assign regional PIC</p>
+        </div>
+        <div class="form-container">
+            <div class="particulars-summary" id="execRequestSummary">
+                <h3>📋 Request Details</h3>
+                <div class="ps-grid" id="execPsGrid"></div>
+            </div>
+
+            <div class="order-box">
+                <div class="order-head">
+                    <h3>🛒 Items Requested</h3><span class="order-count" id="execOrderCount">0</span>
                 </div>
-                <div class="mgr-dashboard">
-                    <div class="mgr-stats">
-                        <div class="mgr-stat-card pending-card">
-                            <div class="mgr-stat-icon">⏳</div>
-                            <div class="mgr-stat-val" id="execPending">0</div>
-                            <div class="mgr-stat-label">Pending Review</div>
+                <table class="order-tbl">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Item</th>
+                            <th>Size</th>
+                            <th>Colour</th>
+                            <th>Qty</th>
+                        </tr>
+                    </thead>
+                    <tbody id="execOrderBody"></tbody>
+                </table>
+            </div>
+
+            <div class="exec-assign-section">
+                <h3>🗺️ Assign Regional PIC</h3>
+                <p style="font-size:13px;color:#666;margin-bottom:15px;">Select a Person-In-Charge (PIC) for
+                    this
+                    request based on the requestor's region:</p>
+                <div class="pic-grid" id="picGrid">
+                    <div class="pic-card" onclick="selectPIC(this, 'Aminah Binti Hassan', 'Kuching / HQ')">
+                        <div class="pic-avatar" style="background:linear-gradient(135deg,#e91e63,#c2185b);">AH
                         </div>
-                        <div class="mgr-stat-card approved-card">
-                            <div class="mgr-stat-icon">✅</div>
-                            <div class="mgr-stat-val" id="execApproved">0</div>
-                            <div class="mgr-stat-label">Approved & Assigned</div>
-                        </div>
-                        <div class="mgr-stat-card rejected-card">
-                            <div class="mgr-stat-icon">❌</div>
-                            <div class="mgr-stat-val" id="execRejected">0</div>
-                            <div class="mgr-stat-label">Rejected</div>
-                        </div>
-                        <div class="mgr-stat-card total-card">
-                            <div class="mgr-stat-icon">📊</div>
-                            <div class="mgr-stat-val" id="execTotal">0</div>
-                            <div class="mgr-stat-label">Total Processed</div>
-                        </div>
+                        <div class="pic-name">Aminah Binti Hassan</div>
+                        <div class="pic-region">📍 Kuching / HQ</div>
                     </div>
-                    <div class="mgr-queue-card">
-                        <h2>📋 Requests Queue <span class="badge" id="execQueueBadge">0</span></h2>
-                        <div id="execQueueList"></div>
-                    </div>
-                    <div class="mgr-queue-card">
-                        <h2>📜 Action History</h2>
-                        <div id="execHistoryList">
-                            <div class="history-empty">
-                                <div class="history-empty-icon">📭</div>
-                                <p>No actions taken yet.</p>
-                            </div>
+                    <div class="pic-card" onclick="selectPIC(this, 'James Lim', 'Sibu Region')">
+                        <div class="pic-avatar" style="background:linear-gradient(135deg,#2196F3,#1565c0);">JL
                         </div>
+                        <div class="pic-name">James Lim</div>
+                        <div class="pic-region">📍 Sibu Region</div>
                     </div>
+                    <div class="pic-card" onclick="selectPIC(this, 'Dayang Noor', 'Bintulu Region')">
+                        <div class="pic-avatar" style="background:linear-gradient(135deg,#ff9800,#e65100);">DN
+                        </div>
+                        <div class="pic-name">Dayang Noor</div>
+                        <div class="pic-region">📍 Bintulu Region</div>
+                    </div>
+                    <div class="pic-card" onclick="selectPIC(this, 'Robert Tingang', 'Miri Region')">
+                        <div class="pic-avatar" style="background:linear-gradient(135deg,#4CAF50,#2e7d32);">RT
+                        </div>
+                        <div class="pic-name">Robert Tingang</div>
+                        <div class="pic-region">📍 Miri Region</div>
+                    </div>
+                    <div class="pic-card" onclick="selectPIC(this, 'Siti Aishah', 'All Regions')">
+                        <div class="pic-avatar" style="background:linear-gradient(135deg,#9C27B0,#6a1b9a);">SA
+                        </div>
+                        <div class="pic-name">Siti Aishah</div>
+                        <div class="pic-region">📍 All Regions (Backup)</div>
+                    </div>
+                </div>
+                <div style="margin-top:12px;font-size:12px;color:#888;" id="execPICSelected">No PIC selected yet
                 </div>
             </div>
 
-            <!-- EXECUTIVE DETAIL VIEW -->
-            <div class="page" id="pageExecDetail">
-                <div class="form-banner exec-banner">
-                    <h1>👩‍💻 Executive - Request Review & PIC Assignment</h1>
-                    <p>Review details, approve/reject, and assign regional PIC</p>
+            <div class="lm-action-bar">
+                <button class="lm-btn-back" onclick="navigateTo('execDashboard')">← Back</button>
+                <button class="lm-btn-reject" onclick="openRejectModal('exec')">✕ Reject</button>
+                <button class="lm-btn-approve" onclick="approveRequest('exec')">✅ Approve</button>
+                <button class="exec-btn-assign" onclick="approveAndAssign()">✅ Approve & Assign PIC</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ PIC PAGES ============ -->
+
+    <!-- PIC DASHBOARD -->
+    <div class="page" id="pagePICDashboard">
+        <div class="form-banner pic-banner">
+            <h1>📦 PIC Dashboard (Person-In-Charge)</h1>
+            <p>Manage assigned requests, update item statuses and monitor stock levels</p>
+        </div>
+        <div class="mgr-dashboard">
+            <div class="pic-location-bar">
+                <label>📍 Location:</label>
+                <select id="picLocationFilter" onchange="filterPICByLocation()">
+                    <option value="all">All Locations</option>
+                    <option value="Menara SEB - HQ">Menara SEB - HQ</option>
+                    <option value="Kuching Office">Kuching Office</option>
+                    <option value="Sibu Office">Sibu Office</option>
+                    <option value="Bintulu Office">Bintulu Office</option>
+                    <option value="Miri Office">Miri Office</option>
+                </select>
+                <button class="btn-view-all"
+                    onclick="document.getElementById('picLocationFilter').value='all';filterPICByLocation();">View
+                    All
+                    Requests</button>
+            </div>
+
+            <div class="pic-stats">
+                <div class="pic-stat-card pic-pending">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-val" id="picStatPending">0</div>
+                    <div class="stat-label">Pending</div>
                 </div>
-                <div class="form-container">
-                    <div class="particulars-summary" id="execRequestSummary">
-                        <h3>📋 Request Details</h3>
-                        <div class="ps-grid" id="execPsGrid"></div>
-                    </div>
-
-                    <div class="order-box">
-                        <div class="order-head">
-                            <h3>🛒 Items Requested</h3><span class="order-count" id="execOrderCount">0</span>
-                        </div>
-                        <table class="order-tbl">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Item</th>
-                                    <th>Size</th>
-                                    <th>Colour</th>
-                                    <th>Qty</th>
-                                </tr>
-                            </thead>
-                            <tbody id="execOrderBody"></tbody>
-                        </table>
-                    </div>
-
-                    <div class="exec-assign-section">
-                        <h3>🗺️ Assign Regional PIC</h3>
-                        <p style="font-size:13px;color:#666;margin-bottom:15px;">Select a Person-In-Charge (PIC) for
-                            this
-                            request based on the requestor's region:</p>
-                        <div class="pic-grid" id="picGrid">
-                            <div class="pic-card" onclick="selectPIC(this, 'Aminah Binti Hassan', 'Kuching / HQ')">
-                                <div class="pic-avatar" style="background:linear-gradient(135deg,#e91e63,#c2185b);">AH
-                                </div>
-                                <div class="pic-name">Aminah Binti Hassan</div>
-                                <div class="pic-region">📍 Kuching / HQ</div>
-                            </div>
-                            <div class="pic-card" onclick="selectPIC(this, 'James Lim', 'Sibu Region')">
-                                <div class="pic-avatar" style="background:linear-gradient(135deg,#2196F3,#1565c0);">JL
-                                </div>
-                                <div class="pic-name">James Lim</div>
-                                <div class="pic-region">📍 Sibu Region</div>
-                            </div>
-                            <div class="pic-card" onclick="selectPIC(this, 'Dayang Noor', 'Bintulu Region')">
-                                <div class="pic-avatar" style="background:linear-gradient(135deg,#ff9800,#e65100);">DN
-                                </div>
-                                <div class="pic-name">Dayang Noor</div>
-                                <div class="pic-region">📍 Bintulu Region</div>
-                            </div>
-                            <div class="pic-card" onclick="selectPIC(this, 'Robert Tingang', 'Miri Region')">
-                                <div class="pic-avatar" style="background:linear-gradient(135deg,#4CAF50,#2e7d32);">RT
-                                </div>
-                                <div class="pic-name">Robert Tingang</div>
-                                <div class="pic-region">📍 Miri Region</div>
-                            </div>
-                            <div class="pic-card" onclick="selectPIC(this, 'Siti Aishah', 'All Regions')">
-                                <div class="pic-avatar" style="background:linear-gradient(135deg,#9C27B0,#6a1b9a);">SA
-                                </div>
-                                <div class="pic-name">Siti Aishah</div>
-                                <div class="pic-region">📍 All Regions (Backup)</div>
-                            </div>
-                        </div>
-                        <div style="margin-top:12px;font-size:12px;color:#888;" id="execPICSelected">No PIC selected yet
-                        </div>
-                    </div>
-
-                    <div class="lm-action-bar">
-                        <button class="lm-btn-back" onclick="navigateTo('execDashboard')">← Back</button>
-                        <button class="lm-btn-reject" onclick="openRejectModal('exec')">✕ Reject</button>
-                        <button class="lm-btn-approve" onclick="approveRequest('exec')">✅ Approve</button>
-                        <button class="exec-btn-assign" onclick="approveAndAssign()">✅ Approve & Assign PIC</button>
-                    </div>
+                <div class="pic-stat-card pic-processing">
+                    <div class="stat-icon">⚙️</div>
+                    <div class="stat-val" id="picStatProcessing">0</div>
+                    <div class="stat-label">Processing</div>
+                </div>
+                <div class="pic-stat-card pic-delivered">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-val" id="picStatDelivered">0</div>
+                    <div class="stat-label">Delivered</div>
+                </div>
+                <div class="pic-stat-card pic-total">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-val" id="picStatTotal">0</div>
+                    <div class="stat-label">Total Assigned</div>
                 </div>
             </div>
 
-            <!-- ============ PIC PAGES ============ -->
+            <!-- Stock Count Panel -->
+            <div class="stock-panel">
+                <h2>📦 Stock Count</h2>
+                <div class="stock-grid" id="stockGrid"></div>
+            </div>
 
-            <!-- PIC DASHBOARD -->
-            <div class="page" id="pagePICDashboard">
-                <div class="form-banner pic-banner">
-                    <h1>📦 PIC Dashboard (Person-In-Charge)</h1>
-                    <p>Manage assigned requests, update item statuses and monitor stock levels</p>
-                </div>
-                <div class="mgr-dashboard">
-                    <div class="pic-location-bar">
-                        <label>📍 Location:</label>
-                        <select id="picLocationFilter" onchange="filterPICByLocation()">
-                            <option value="all">All Locations</option>
-                            <option value="Menara SEB - HQ">Menara SEB - HQ</option>
-                            <option value="Kuching Office">Kuching Office</option>
-                            <option value="Sibu Office">Sibu Office</option>
-                            <option value="Bintulu Office">Bintulu Office</option>
-                            <option value="Miri Office">Miri Office</option>
-                        </select>
-                        <button class="btn-view-all"
-                            onclick="document.getElementById('picLocationFilter').value='all';filterPICByLocation();">View
-                            All
-                            Requests</button>
-                    </div>
+            <!-- Requests Table -->
+            <div class="pic-queue-card">
+                <h2>📋 Assigned Requests <span class="badge" id="picQueueBadge" style="background:#00897B;">0</span>
+                </h2>
+                <div id="picRequestsTable"></div>
+            </div>
 
-                    <div class="pic-stats">
-                        <div class="pic-stat-card pic-pending">
-                            <div class="stat-icon">⏳</div>
-                            <div class="stat-val" id="picStatPending">0</div>
-                            <div class="stat-label">Pending</div>
-                        </div>
-                        <div class="pic-stat-card pic-processing">
-                            <div class="stat-icon">⚙️</div>
-                            <div class="stat-val" id="picStatProcessing">0</div>
-                            <div class="stat-label">Processing</div>
-                        </div>
-                        <div class="pic-stat-card pic-delivered">
-                            <div class="stat-icon">✅</div>
-                            <div class="stat-val" id="picStatDelivered">0</div>
-                            <div class="stat-label">Delivered</div>
-                        </div>
-                        <div class="pic-stat-card pic-total">
-                            <div class="stat-icon">📊</div>
-                            <div class="stat-val" id="picStatTotal">0</div>
-                            <div class="stat-label">Total Assigned</div>
-                        </div>
-                    </div>
-
-                    <!-- Stock Count Panel -->
-                    <div class="stock-panel">
-                        <h2>📦 Stock Count</h2>
-                        <div class="stock-grid" id="stockGrid"></div>
-                    </div>
-
-                    <!-- Requests Table -->
-                    <div class="pic-queue-card">
-                        <h2>📋 Assigned Requests <span class="badge" id="picQueueBadge"
-                                style="background:#00897B;">0</span>
-                        </h2>
-                        <div id="picRequestsTable"></div>
-                    </div>
-
-                    <!-- PIC Action History -->
-                    <div class="pic-queue-card">
-                        <h2>📜 Update History</h2>
-                        <div id="picHistoryList">
-                            <div class="history-empty">
-                                <div class="history-empty-icon">📭</div>
-                                <p>No updates yet.</p>
-                            </div>
-                        </div>
+            <!-- PIC Action History -->
+            <div class="pic-queue-card">
+                <h2>📜 Update History</h2>
+                <div id="picHistoryList">
+                    <div class="history-empty">
+                        <div class="history-empty-icon">📭</div>
+                        <p>No updates yet.</p>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <!-- PIC ITEM UPDATE -->
-            <div class="page" id="pagePICItemUpdate">
-                <div class="form-banner pic-banner">
-                    <h1>📦 Item-Level Update (PIC)</h1>
-                    <p>Update delivery status for each item in this request</p>
-                </div>
-                <div class="pic-update-container">
-                    <div class="pic-req-header">
-                        <h3>📋 Request Details</h3>
-                        <div class="req-meta" id="picReqMeta"></div>
-                    </div>
-
-                    <div class="order-box">
-                        <div class="order-head">
-                            <h3>🛒 Items Requested</h3><span class="order-count" id="picItemCount">0</span>
-                        </div>
-                        <table class="pic-items-table">
-                            <thead>
-                                <tr>
-                                    <th>Item</th>
-                                    <th>Qty Req.</th>
-                                    <th>Qty Deliv.</th>
-                                    <th>Status</th>
-                                    <th>Received Date</th>
-                                    <th>Remark</th>
-                                </tr>
-                            </thead>
-                            <tbody id="picItemsBody"></tbody>
-                        </table>
-                    </div>
-
-                    <div class="pic-update-summary" id="picUpdateSummary"></div>
-
-                    <div class="pic-update-actions">
-                        <button class="btn-pic-back" onclick="navigateTo('picDashboard')">← Back</button>
-                        <button class="btn-pic-save" onclick="savePICUpdate()">💾 Save Update</button>
-                    </div>
-                </div>
+    <!-- PIC ITEM UPDATE -->
+    <div class="page" id="pagePICItemUpdate">
+        <div class="form-banner pic-banner">
+            <h1>📦 Item-Level Update (PIC)</h1>
+            <p>Update delivery status for each item in this request</p>
+        </div>
+        <div class="pic-update-container">
+            <div class="pic-req-header">
+                <h3>📋 Request Details</h3>
+                <div class="req-meta" id="picReqMeta"></div>
             </div>
 
-            <!-- ===== CART DRAWER ===== -->
-            <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
-            <div class="cart-drawer" id="cartDrawer">
-                <div class="drawer-head">
-                    <h3>🛒 Your Cart</h3><button class="drawer-close" onclick="closeDrawer()">&times;</button>
+            <div class="order-box">
+                <div class="order-head">
+                    <h3>🛒 Items Requested</h3><span class="order-count" id="picItemCount">0</span>
                 </div>
-                <div class="drawer-body" id="drawerBody">
-                    <div class="drawer-empty">
-                        <div class="drawer-empty-icon">🛒</div>
-                        <p>Your cart is empty</p>
-                    </div>
-                </div>
-                <div class="drawer-foot">
-                    <div class="drawer-total"><span>Total Items:</span><span class="drawer-total-val"
-                            id="drawerTotal">0</span>
-                    </div><button class="btn-drawer-checkout" id="btnDrawerGo" disabled
-                        onclick="closeDrawer();navigateTo('reviewForm');">Proceed to Review →</button>
-                </div>
+                <table class="pic-items-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Qty Req.</th>
+                            <th>Qty Deliv.</th>
+                            <th>Status</th>
+                            <th>Received Date</th>
+                            <th>Remark</th>
+                        </tr>
+                    </thead>
+                    <tbody id="picItemsBody"></tbody>
+                </table>
             </div>
 
-            <!-- ===== MODALS ===== -->
-            <!-- Confirm -->
-            <div class="modal-overlay" id="confirmModal">
-                <div class="confirm-box">
-                    <div class="confirm-head">
-                        <div class="c-icon">📋</div>
-                        <h2>Confirm Submission</h2>
-                        <p>Review before submitting</p>
-                    </div>
-                    <div class="confirm-body">
-                        <div class="cf-subtitle">Staff Details<span class="ln"></span></div>
-                        <table class="cf-table">
-                            <tr>
-                                <td>Name</td>
-                                <td id="cfName">—</td>
-                            </tr>
-                            <tr>
-                                <td>Staff No.</td>
-                                <td id="cfStaff">—</td>
-                            </tr>
-                            <tr>
-                                <td>Department</td>
-                                <td id="cfDept">—</td>
-                            </tr>
-                            <tr>
-                                <td>Entitlement</td>
-                                <td id="cfEntitle">—</td>
-                            </tr>
-                            <tr>
-                                <td>Service Type</td>
-                                <td id="cfService">—</td>
-                            </tr>
-                            <tr>
-                                <td>Contact</td>
-                                <td id="cfContact">—</td>
-                            </tr>
-                        </table>
-                        <div class="cf-subtitle">Items Ordered<span class="ln"></span></div>
-                        <div class="cf-items" id="cfItems"></div>
-                        <div class="cf-warning"><span>⚠️</span><span>Once submitted, this request goes to your
-                                supervisor/manager for approval.</span></div>
-                    </div>
-                    <div class="confirm-foot"><button class="btn-cf-cancel"
-                            onclick="closeModals()">Cancel</button><button class="btn-cf-confirm"
-                            onclick="doExistingStaffSubmit()">✅ Confirm & Submit</button></div>
-                </div>
-            </div>
+            <div class="pic-update-summary" id="picUpdateSummary"></div>
 
-            <!-- Loading -->
-            <div class="modal-overlay" id="loadModal">
-                <div class="loading-box">
-                    <div class="spinner"></div>
-                    <div class="load-text">Processing...</div>
-                    <div class="load-sub">Please wait</div>
-                    <div class="progress-track">
-                        <div class="progress-fill" id="progBar"></div>
-                    </div>
-                </div>
+            <div class="pic-update-actions">
+                <button class="btn-pic-back" onclick="navigateTo('picDashboard')">← Back</button>
+                <button class="btn-pic-save" onclick="savePICUpdate()">💾 Save Update</button>
             </div>
+        </div>
+    </div>
 
-            <!-- Success (Existing Staff) -->
-            <div class="modal-overlay" id="successModal">
-                <div class="success-box">
-                    <div class="success-head" id="sucHead">
-                        <div class="check-circle"><svg viewBox="0 0 24 24">
-                                <path d="M5 13l4 4L19 7" />
-                            </svg></div>
-                        <h2>Request Submitted!</h2>
-                        <p>Your U&S request has been submitted</p>
-                    </div>
-                    <div class="success-body">
-                        <div class="req-id-box">
-                            <div class="req-id-label">Request ID</div>
-                            <div class="req-id-val" id="sucReqId">—</div>
-                        </div>
-                        <div class="suc-details">
-                            <div class="suc-row"><span class="suc-label">Submitted By</span><span class="suc-val"
-                                    id="sucName">—</span></div>
-                            <div class="suc-row"><span class="suc-label">Items</span><span class="suc-val"
-                                    id="sucItems">—</span></div>
-                            <div class="suc-row"><span class="suc-label">Date</span><span class="suc-val"
-                                    id="sucDate">—</span>
-                            </div>
-                            <div class="suc-row"><span class="suc-label">Status</span><span class="suc-val"><span
-                                        class="status-pill submitted">Pending Approval</span></span></div>
-                            <div class="suc-row"><span class="suc-label">Approver</span><span class="suc-val"
-                                    id="sucApprover">—</span></div>
-                        </div>
-                        <div class="suc-info"><span>ℹ️</span><span>Track in <strong>My Requests</strong></span></div>
-                    </div>
-                    <div class="success-foot"><button class="btn-finish" onclick="closeModals();finishAndGoHome();">✓
-                            Done</button></div>
-                </div>
+    <!-- ===== CART DRAWER ===== -->
+    <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="drawer-head">
+            <h3>🛒 Your Cart</h3><button class="drawer-close" onclick="closeDrawer()">&times;</button>
+        </div>
+        <div class="drawer-body" id="drawerBody">
+            <div class="drawer-empty">
+                <div class="drawer-empty-icon">🛒</div>
+                <p>Your cart is empty</p>
             </div>
+        </div>
+        <div class="drawer-foot">
+            <div class="drawer-total"><span>Total Items:</span><span class="drawer-total-val"
+                    id="drawerTotal">0</span>
+            </div><button class="btn-drawer-checkout" id="btnDrawerGo" disabled
+                onclick="closeDrawer();navigateTo('reviewForm');">Proceed to Review →</button>
+        </div>
+    </div>
 
-            <!-- Checkout Success -->
-            <div class="modal-overlay" id="checkoutSuccessModal">
-                <div class="checkout-modal">
-                    <div class="cm-icon">✓</div>
-                    <h2>Request Submitted!</h2>
-                    <p id="checkoutModalMsg">Routed to PIC.</p>
-                    <div class="req-id-box" style="margin-bottom:20px;">
-                        <div class="req-id-label">Request ID</div>
-                        <div class="req-id-val" id="checkoutReqId">—</div>
-                    </div><button class="cm-btn" onclick="closeModals();finishAndGoHome();">Done</button>
-                </div>
+    <!-- ===== MODALS ===== -->
+    <!-- Confirm -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="confirm-box">
+            <div class="confirm-head">
+                <div class="c-icon">📋</div>
+                <h2>Confirm Submission</h2>
+                <p>Review before submitting</p>
             </div>
-
-            <!-- Reject Reason Modal -->
-            <div class="modal-overlay" id="rejectModal">
-                <div class="reject-modal-inner">
-                    <div class="reject-modal-head">
-                        <h2>❌ Reject Request</h2>
-                    </div>
-                    <div class="reject-modal-body">
-                        <label style="font-weight:700;font-size:13px;display:block;margin-bottom:8px;">Reason for
-                            Rejection
-                            <span class="required-star">*</span></label>
-                        <textarea id="rejectReason"
-                            placeholder="Please provide a reason for rejecting this request..."></textarea>
-                    </div>
-                    <div class="reject-modal-foot">
-                        <button class="btn-cf-cancel" onclick="closeModals()">Cancel</button>
-                        <button class="lm-btn-reject" onclick="confirmReject()">Confirm Reject</button>
-                    </div>
-                </div>
+            <div class="confirm-body">
+                <div class="cf-subtitle">Staff Details<span class="ln"></span></div>
+                <table class="cf-table">
+                    <tr>
+                        <td>Name</td>
+                        <td id="cfName">—</td>
+                    </tr>
+                    <tr>
+                        <td>Staff No.</td>
+                        <td id="cfStaff">—</td>
+                    </tr>
+                    <tr>
+                        <td>Department</td>
+                        <td id="cfDept">—</td>
+                    </tr>
+                    <tr>
+                        <td>Entitlement</td>
+                        <td id="cfEntitle">—</td>
+                    </tr>
+                    <tr>
+                        <td>Service Type</td>
+                        <td id="cfService">—</td>
+                    </tr>
+                    <tr>
+                        <td>Contact</td>
+                        <td id="cfContact">—</td>
+                    </tr>
+                </table>
+                <div class="cf-subtitle">Items Ordered<span class="ln"></span></div>
+                <div class="cf-items" id="cfItems"></div>
+                <div class="cf-warning"><span>⚠️</span><span>Once submitted, this request goes to your
+                        supervisor/manager for approval.</span></div>
             </div>
+            <div class="confirm-foot"><button class="btn-cf-cancel" onclick="closeModals()">Cancel</button><button
+                    class="btn-cf-confirm" onclick="doExistingStaffSubmit()">✅ Confirm & Submit</button></div>
+        </div>
+    </div>
 
-            <!-- Generic Action Success -->
-            <div class="modal-overlay" id="actionSuccessModal">
-                <div class="checkout-modal">
-                    <div class="cm-icon" id="actionSuccessIcon">✓</div>
-                    <h2 id="actionSuccessTitle">Action Complete</h2>
-                    <p id="actionSuccessMsg">The request has been processed.</p>
-                    <button class="cm-btn" onclick="closeModals();" id="actionSuccessBtn">OK</button>
-                </div>
+    <!-- Loading -->
+    <div class="modal-overlay" id="loadModal">
+        <div class="loading-box">
+            <div class="spinner"></div>
+            <div class="load-text">Processing...</div>
+            <div class="load-sub">Please wait</div>
+            <div class="progress-track">
+                <div class="progress-fill" id="progBar"></div>
             </div>
+        </div>
+    </div>
 
-            <!-- Acknowledgement & Feedback Modal (#9) -->
-            <div class="modal-overlay" id="feedbackModal">
-                <div class="feedback-modal-inner">
-                    <div class="feedback-head">
-                        <h2>📦 Acknowledgement & Feedback</h2>
-                        <p>Your items have been delivered. Please confirm receipt and provide feedback.</p>
-                    </div>
-                    <div class="feedback-body">
-                        <div class="feedback-confirm-box">
-                            <div class="fc-icon">📦</div>
-                            <p>Your items have been delivered.</p>
-                            <small>Please confirm receipt and provide your feedback.</small><br>
-                            <button class="btn-confirm-receipt" id="btnConfirmReceipt" onclick="confirmReceipt()">✅
-                                Confirm
-                                Receipt</button>
-                        </div>
-                        <div class="rating-section">
-                            <h4>⭐ Rate Our Service</h4>
-                            <div class="rating-row">
-                                <span class="rating-label">Overall Quality</span>
-                                <div class="star-row" id="starsQuality"></div>
-                            </div>
-                            <div class="rating-row">
-                                <span class="rating-label">Professionalism</span>
-                                <div class="star-row" id="starsProfessionalism"></div>
-                            </div>
-                            <div class="rating-row">
-                                <span class="rating-label">Timeliness</span>
-                                <div class="star-row" id="starsTimeliness"></div>
-                            </div>
-                        </div>
-                        <div class="form-group" style="margin-bottom:0;">
-                            <label>Comments (Optional)</label>
-                            <textarea id="feedbackComments" placeholder="Share your feedback..." rows="3"
-                                style="width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:6px;font-size:14px;font-family:inherit;outline:none;resize:vertical;"
-                                onfocus="this.style.borderColor='#4CAF50'"
-                                onblur="this.style.borderColor='#ddd'"></textarea>
-                        </div>
-                    </div>
-                    <div class="feedback-foot">
-                        <button class="btn-cf-cancel" onclick="closeModals()">Close</button>
-                        <button class="btn-submit-feedback" onclick="submitFeedback()">📨 Submit Feedback</button>
-                    </div>
-                </div>
+    <!-- Success (Existing Staff) -->
+    <div class="modal-overlay" id="successModal">
+        <div class="success-box">
+            <div class="success-head" id="sucHead">
+                <div class="check-circle"><svg viewBox="0 0 24 24">
+                        <path d="M5 13l4 4L19 7" />
+                    </svg></div>
+                <h2>Request Submitted!</h2>
+                <p>Your U&S request has been submitted</p>
             </div>
+            <div class="success-body">
+                <div class="req-id-box">
+                    <div class="req-id-label">Request ID</div>
+                    <div class="req-id-val" id="sucReqId">—</div>
+                </div>
+                <div class="suc-details">
+                    <div class="suc-row"><span class="suc-label">Submitted By</span><span class="suc-val"
+                            id="sucName">—</span></div>
+                    <div class="suc-row"><span class="suc-label">Items</span><span class="suc-val"
+                            id="sucItems">—</span></div>
+                    <div class="suc-row"><span class="suc-label">Date</span><span class="suc-val"
+                            id="sucDate">—</span>
+                    </div>
+                    <div class="suc-row"><span class="suc-label">Status</span><span class="suc-val"><span
+                                class="status-pill submitted">Pending Approval</span></span></div>
+                    <div class="suc-row"><span class="suc-label">Approver</span><span class="suc-val"
+                            id="sucApprover">—</span></div>
+                </div>
+                <div class="suc-info"><span>ℹ️</span><span>Track in <strong>My Requests</strong></span></div>
+            </div>
+            <div class="success-foot"><button class="btn-finish" onclick="closeModals();finishAndGoHome();">✓
+                    Done</button></div>
+        </div>
+    </div>
 
-            <!-- Return / Replacement Request Modal (#10) -->
-            <div class="modal-overlay" id="returnModal">
-                <div class="return-modal-inner">
-                    <div class="return-head">
-                        <h2>🔄 Return / Replacement Request</h2>
-                        <p>Submit a return or replacement request for delivered items</p>
+    <!-- Checkout Success -->
+    <div class="modal-overlay" id="checkoutSuccessModal">
+        <div class="checkout-modal">
+            <div class="cm-icon">✓</div>
+            <h2>Request Submitted!</h2>
+            <p id="checkoutModalMsg">Routed to PIC.</p>
+            <div class="req-id-box" style="margin-bottom:20px;">
+                <div class="req-id-label">Request ID</div>
+                <div class="req-id-val" id="checkoutReqId">—</div>
+            </div><button class="cm-btn" onclick="closeModals();finishAndGoHome();">Done</button>
+        </div>
+    </div>
+
+    <!-- Reject Reason Modal -->
+    <div class="modal-overlay" id="rejectModal">
+        <div class="reject-modal-inner">
+            <div class="reject-modal-head">
+                <h2>❌ Reject Request</h2>
+            </div>
+            <div class="reject-modal-body">
+                <label style="font-weight:700;font-size:13px;display:block;margin-bottom:8px;">Reason for
+                    Rejection
+                    <span class="required-star">*</span></label>
+                <textarea id="rejectReason"
+                    placeholder="Please provide a reason for rejecting this request..."></textarea>
+            </div>
+            <div class="reject-modal-foot">
+                <button class="btn-cf-cancel" onclick="closeModals()">Cancel</button>
+                <button class="lm-btn-reject" onclick="confirmReject()">Confirm Reject</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generic Action Success -->
+    <div class="modal-overlay" id="actionSuccessModal">
+        <div class="checkout-modal">
+            <div class="cm-icon" id="actionSuccessIcon">✓</div>
+            <h2 id="actionSuccessTitle">Action Complete</h2>
+            <p id="actionSuccessMsg">The request has been processed.</p>
+            <button class="cm-btn" onclick="closeModals();" id="actionSuccessBtn">OK</button>
+        </div>
+    </div>
+
+    <!-- Acknowledgement & Feedback Modal (#9) -->
+    <div class="modal-overlay" id="feedbackModal">
+        <div class="feedback-modal-inner">
+            <div class="feedback-head">
+                <h2>📦 Acknowledgement & Feedback</h2>
+                <p>Your items have been delivered. Please confirm receipt and provide feedback.</p>
+            </div>
+            <div class="feedback-body">
+                <div class="feedback-confirm-box">
+                    <div class="fc-icon">📦</div>
+                    <p>Your items have been delivered.</p>
+                    <small>Please confirm receipt and provide your feedback.</small><br>
+                    <button class="btn-confirm-receipt" id="btnConfirmReceipt" onclick="confirmReceipt()">✅
+                        Confirm
+                        Receipt</button>
+                </div>
+                <div class="rating-section">
+                    <h4>⭐ Rate Our Service</h4>
+                    <div class="rating-row">
+                        <span class="rating-label">Overall Quality</span>
+                        <div class="star-row" id="starsQuality"></div>
                     </div>
-                    <div class="return-body">
-                        <div class="form-group">
-                            <label>Select Item to Return <span class="required-star">*</span></label>
-                            <select id="returnItemSelect">
-                                <option value="">-- Select Item --</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Reason <span class="required-star">*</span></label>
-                            <select id="returnReason">
-                                <option value="">-- Select Reason --</option>
-                                <option value="Wrong Size Delivered">Wrong Size Delivered</option>
-                                <option value="Damaged / Defective">Damaged / Defective</option>
-                                <option value="Wrong Item Delivered">Wrong Item Delivered</option>
-                                <option value="Quality Issue">Quality Issue</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Justification <span class="required-star">*</span></label>
-                            <textarea id="returnJustification" placeholder="Please describe the issue in detail..."
-                                rows="3"></textarea>
-                        </div>
-                        <div class="return-process-box">
-                            <h4>📋 Return & Replacement Process</h4>
-                            <ul>
-                                <li>Return the item to PIC</li>
-                                <li>Submit replacement request</li>
-                                <li>Reversal will be captured in Inventory</li>
-                                <li>Approval is mandatory</li>
-                                <li>Subject to limit, T&C, and justification</li>
-                            </ul>
-                        </div>
+                    <div class="rating-row">
+                        <span class="rating-label">Professionalism</span>
+                        <div class="star-row" id="starsProfessionalism"></div>
                     </div>
-                    <div class="return-foot">
-                        <button class="btn-cf-cancel" onclick="closeModals()">Cancel</button>
-                        <button class="btn-submit-return" onclick="submitReturnRequest()">✅ Submit Request</button>
+                    <div class="rating-row">
+                        <span class="rating-label">Timeliness</span>
+                        <div class="star-row" id="starsTimeliness"></div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Clear All Data Warning Modal -->
-            <div class="modal-overlay" id="clearDataModal">
-                <div class="clear-modal-inner">
-                    <div class="clear-modal-head">
-                        <div class="warn-icon">⚠️</div>
-                        <h2>Delete All Data?</h2>
-                        <p>This action cannot be undone</p>
-                    </div>
-                    <div class="clear-modal-body">
-                        <p>You are about to <strong>permanently delete</strong> all your past data. This includes:</p>
-                        <ul class="warn-list">
-                            <li>All request history & records</li>
-                            <li>Pending & approved queues</li>
-                            <li>PIC assigned tasks & updates</li>
-                            <li>All feedback & return records</li>
-                        </ul>
-                        <p style="color:#888;font-size:12px;">Are you sure you wish to proceed?</p>
-                    </div>
-                    <div class="clear-modal-foot">
-                        <button class="btn-clear-cancel" onclick="closeModals()">Cancel</button>
-                        <button class="btn-clear-confirm" onclick="confirmClearAllData()">🗑️ Yes, Delete All</button>
-                    </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <label>Comments (Optional)</label>
+                    <textarea id="feedbackComments" placeholder="Share your feedback..." rows="3"
+                        style="width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:6px;font-size:14px;font-family:inherit;outline:none;resize:vertical;"
+                        onfocus="this.style.borderColor='#4CAF50'"
+                        onblur="this.style.borderColor='#ddd'"></textarea>
                 </div>
             </div>
+            <div class="feedback-foot">
+                <button class="btn-cf-cancel" onclick="closeModals()">Close</button>
+                <button class="btn-submit-feedback" onclick="submitFeedback()">📨 Submit Feedback</button>
+            </div>
+        </div>
+    </div>
 
-            <div class="toast" id="toast"></div>
+    <!-- Return / Replacement Request Modal (#10) -->
+    <div class="modal-overlay" id="returnModal">
+        <div class="return-modal-inner">
+            <div class="return-head">
+                <h2>🔄 Return / Replacement Request</h2>
+                <p>Submit a return or replacement request for delivered items</p>
+            </div>
+            <div class="return-body">
+                <div class="form-group">
+                    <label>Select Item to Return <span class="required-star">*</span></label>
+                    <select id="returnItemSelect">
+                        <option value="">-- Select Item --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Reason <span class="required-star">*</span></label>
+                    <select id="returnReason">
+                        <option value="">-- Select Reason --</option>
+                        <option value="Wrong Size Delivered">Wrong Size Delivered</option>
+                        <option value="Damaged / Defective">Damaged / Defective</option>
+                        <option value="Wrong Item Delivered">Wrong Item Delivered</option>
+                        <option value="Quality Issue">Quality Issue</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Justification <span class="required-star">*</span></label>
+                    <textarea id="returnJustification" placeholder="Please describe the issue in detail..."
+                        rows="3"></textarea>
+                </div>
+                <div class="return-process-box">
+                    <h4>📋 Return & Replacement Process</h4>
+                    <ul>
+                        <li>Return the item to PIC</li>
+                        <li>Submit replacement request</li>
+                        <li>Reversal will be captured in Inventory</li>
+                        <li>Approval is mandatory</li>
+                        <li>Subject to limit, T&C, and justification</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="return-foot">
+                <button class="btn-cf-cancel" onclick="closeModals()">Cancel</button>
+                <button class="btn-submit-return" onclick="submitReturnRequest()">✅ Submit Request</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clear All Data Warning Modal -->
+    <div class="modal-overlay" id="clearDataModal">
+        <div class="clear-modal-inner">
+            <div class="clear-modal-head">
+                <div class="warn-icon">⚠️</div>
+                <h2>Delete All Data?</h2>
+                <p>This action cannot be undone</p>
+            </div>
+            <div class="clear-modal-body">
+                <p>You are about to <strong>permanently delete</strong> all your past data. This includes:</p>
+                <ul class="warn-list">
+                    <li>All request history & records</li>
+                    <li>Pending & approved queues</li>
+                    <li>PIC assigned tasks & updates</li>
+                    <li>All feedback & return records</li>
+                </ul>
+                <p style="color:#888;font-size:12px;">Are you sure you wish to proceed?</p>
+            </div>
+            <div class="clear-modal-foot">
+                <button class="btn-clear-cancel" onclick="closeModals()">Cancel</button>
+                <button class="btn-clear-confirm" onclick="confirmClearAllData()">🗑️ Yes, Delete All</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
 
             <script>
                 /* ============ ALPHA MAINTENANCE MODE ============ */
