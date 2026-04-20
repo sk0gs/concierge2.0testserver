@@ -4454,7 +4454,7 @@
         <div class="page" id="pageExistingForm">
             <div class="form-banner">
                 <h1>Service Request Form</h1>
-                <p>Your particulars are auto-filled from the system. Verify and proceed to select items.</p>
+                <p id="efBannerDesc">Your particulars are auto-filled from the system. Verify and proceed to select items.</p>
             </div>
             <div class="form-container">
                 <div class="form-progress">
@@ -4473,7 +4473,12 @@
                         <div class="fp-label">Review & Submit</div>
                     </div>
                 </div>
-                <div class="autofill-badge">✅ Auto-filled from your staff profile</div>
+                <div class="section-title">Request For</div>
+                <div class="service-toggle" id="efRequestModeToggle" style="margin-bottom:16px;">
+                    <button class="pill-btn active" id="efModeOwn" onclick="setRequestMode('own')">👤 Own</button>
+                    <button class="pill-btn" id="efModeOnBehalf" onclick="setRequestMode('onbehalf')">👥 On-Behalf</button>
+                </div>
+                <div class="autofill-badge" id="efAutofillBadge">✅ Auto-filled from your staff profile</div>
                 <div class="form-row">
                     <div class="form-group"><label>Name</label><input type="text" id="efName" value="George Lopez"
                             readonly>
@@ -6013,7 +6018,50 @@
             }
 
             /* ============ FLOWS ============ */
-            function startExistingStaffFlow(category) { currentFlow = 'existingStaff'; cart = []; selectedCategory = category || ''; refreshCartUI(); navigateTo('existingForm'); }
+            let efRequestMode = 'own';
+            const efOwnDefaults = { name: 'George Lopez', staffNo: 'TEST02026', gender: 'Male', manager: 'Tester Line Manager', supervisor: 'Supervisor Tester', email: 'glopez@sarawakenergy.com', designation: 'Supervisor', dept: 'Test Team', region: 'Menara SEB - HQ' };
+
+            function setRequestMode(mode) {
+                efRequestMode = mode;
+                const ownBtn = document.getElementById('efModeOwn');
+                const obBtn = document.getElementById('efModeOnBehalf');
+                ownBtn.classList.toggle('active', mode === 'own');
+                obBtn.classList.toggle('active', mode === 'onbehalf');
+
+                const badge = document.getElementById('efAutofillBadge');
+                const banner = document.getElementById('efBannerDesc');
+                const fields = ['efName','efStaffNo','efGender','efManager','efSupervisor','efEmail','efDesignation','efDept','efRegion'];
+
+                if (mode === 'own') {
+                    badge.style.display = 'block';
+                    badge.innerHTML = '✅ Auto-filled from your staff profile';
+                    banner.textContent = 'Your particulars are auto-filled from the system. Verify and proceed to select items.';
+                    document.getElementById('efName').value = efOwnDefaults.name;
+                    document.getElementById('efStaffNo').value = efOwnDefaults.staffNo;
+                    document.getElementById('efGender').value = efOwnDefaults.gender;
+                    document.getElementById('efManager').value = efOwnDefaults.manager;
+                    document.getElementById('efSupervisor').value = efOwnDefaults.supervisor;
+                    document.getElementById('efEmail').value = efOwnDefaults.email;
+                    document.getElementById('efDesignation').value = efOwnDefaults.designation;
+                    document.getElementById('efDept').value = efOwnDefaults.dept;
+                    document.getElementById('efRegion').value = efOwnDefaults.region;
+                    fields.forEach(id => { document.getElementById(id).readOnly = true; document.getElementById(id).style.background = '#f5f5f5'; });
+                } else {
+                    badge.style.display = 'block';
+                    badge.innerHTML = '📝 Fill in the staff details you are requesting on behalf of';
+                    badge.style.background = '#fff3e0'; badge.style.color = '#e65100'; badge.style.borderColor = '#ffcc80';
+                    banner.textContent = 'You are making a request on behalf of another staff. Please fill in their details below.';
+                    fields.forEach(id => {
+                        const el = document.getElementById(id);
+                        el.value = '';
+                        el.readOnly = false;
+                        el.style.background = '#fff';
+                        el.placeholder = el.previousElementSibling ? el.previousElementSibling.textContent.replace('*','').trim() : '';
+                    });
+                }
+            }
+
+            function startExistingStaffFlow(category) { currentFlow = 'existingStaff'; cart = []; selectedCategory = category || ''; refreshCartUI(); setRequestMode('own'); navigateTo('existingForm'); }
             function startNewJoinerFlow() { currentFlow = 'newJoiner'; checkoutCartAdded = false; navigateTo('newJoinerForm'); }
 
             /* ============ VALIDATE EXISTING ============ */
@@ -6022,10 +6070,23 @@
                 document.querySelectorAll('input.error').forEach(e => e.classList.remove('error'));
                 const contact = document.getElementById('efContact');
                 if (!contact.value.trim()) { contact.classList.add('error'); document.getElementById('errEfContact').classList.add('show'); contact.focus(); showToast('⚠️ Enter contact number', '#ff9800'); return; }
+
+                /* If on-behalf, validate that key fields are filled */
+                if (efRequestMode === 'onbehalf') {
+                    const requiredFields = ['efName','efStaffNo','efGender','efEmail','efDept','efRegion'];
+                    let valid = true, firstBad = null;
+                    requiredFields.forEach(id => {
+                        const el = document.getElementById(id);
+                        if (!el.value.trim()) { el.classList.add('error'); el.style.borderColor = '#f44336'; valid = false; if (!firstBad) firstBad = el; }
+                        else { el.style.borderColor = ''; }
+                    });
+                    if (!valid) { showToast('⚠️ Please fill in all staff details for on-behalf request', '#ff9800'); if (firstBad) firstBad.focus(); return; }
+                }
+
                 const entBtn = document.querySelector('#pageExistingForm .entitlement-group .pill-btn.active');
-                const svcBtn = document.querySelector('#pageExistingForm .service-toggle .pill-btn.active');
+                const svcBtn = document.querySelector('#pageExistingForm .service-toggle:not(#efRequestModeToggle) .pill-btn.active');
                 const cc = document.getElementById('efCostCenter').value;
-                serviceFormData = { name: document.getElementById('efName').value, staffNo: document.getElementById('efStaffNo').value, gender: document.getElementById('efGender').value, manager: document.getElementById('efManager').value, supervisor: document.getElementById('efSupervisor').value, email: document.getElementById('efEmail').value, designation: document.getElementById('efDesignation').value, department: document.getElementById('efDept').value, region: document.getElementById('efRegion').value, contact: contact.value.trim(), entitlement: entBtn ? entBtn.textContent : 'On need basis', serviceType: svcBtn ? svcBtn.textContent : 'Self Pick-up', costCenter: cc, glCode: glCodeMap[cc] || '', remarks: document.getElementById('efRemarks').value.trim() };
+                serviceFormData = { name: document.getElementById('efName').value, staffNo: document.getElementById('efStaffNo').value, gender: document.getElementById('efGender').value, manager: document.getElementById('efManager').value, supervisor: document.getElementById('efSupervisor').value, email: document.getElementById('efEmail').value, designation: document.getElementById('efDesignation').value, department: document.getElementById('efDept').value, region: document.getElementById('efRegion').value, contact: contact.value.trim(), entitlement: entBtn ? entBtn.textContent : 'On need basis', serviceType: svcBtn ? svcBtn.textContent : 'Self Pick-up', costCenter: cc, glCode: glCodeMap[cc] || '', remarks: document.getElementById('efRemarks').value.trim(), requestMode: efRequestMode };
                 showToast('✅ Details verified!', '#4CAF50'); navigateTo('shirtList');
             }
 
