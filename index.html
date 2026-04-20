@@ -4715,7 +4715,7 @@
                         <div class="detail-thumbnails" id="detailThumbnails"></div>
                         <div class="detail-footer" style="margin-top:20px;">
                             <button class="btn-detail-back" onclick="navigateTo('shirtList')">← Back</button>
-                            <button class="btn-detail-add" onclick="addToCartFromDetail()">🛒 Add to Cart</button>
+                            <button class="btn-detail-add" onclick="addToCartFromDetail()"> Add </button>
                         </div>
                     </div>
 
@@ -6158,8 +6158,19 @@
                     c.appendChild(t);
                 });
 
-                detailUploadedImages.forEach(url => { const t = document.createElement('div'); t.className = 'detail-thumb'; t.innerHTML = `<img src="${url}" style="max-width:100%;max-height:100%;object-fit:cover;">`; t.onclick = function () { setActiveThumb(this); document.getElementById('detailMainPlaceholder').innerHTML = `<img src="${url}" style="max-width:100%;max-height:100%;object-fit:contain;">`; }; c.appendChild(t); });
-                const u = document.createElement('div'); u.className = 'detail-thumb-upload'; u.innerHTML = '+'; u.onclick = () => document.getElementById('mainImageUpload').click(); c.appendChild(u);
+                if (detailProduct) {
+                    const u = document.createElement('button'); u.className = 'pill-btn'; u.style.marginTop = '10px'; u.style.padding = '6px 16px'; u.style.borderColor = '#4fc3f7'; u.style.color = '#4fc3f7'; u.innerHTML = '📏 View Sizing Chart';
+                    u.onclick = () => {
+                        document.getElementById('modalSizingCorpBeige').style.display = (detailProduct.id === 'corp-beige') ? 'block' : 'none';
+                        document.getElementById('modalSizingCorpBlack').style.display = (detailProduct.id === 'corp-black') ? 'block' : 'none';
+                        document.getElementById('modalSizingPolo').style.display = (detailProduct.id === 'polo') ? 'block' : 'none';
+                        document.getElementById('modalSizingPTG').style.display = (detailProduct.id === 'ptg-round') ? 'block' : 'none';
+                        document.getElementById('modalSizingTechGrey').style.display = (detailProduct.id === 'tech-grey') ? 'block' : 'none';
+                        document.getElementById('modalSizingTechOrange').style.display = (detailProduct.id === 'tech-orange') ? 'block' : 'none';
+                        document.getElementById('sizingChartModal').style.display = 'flex';
+                    };
+                    c.appendChild(u);
+                }
             }
             function setActiveThumb(el) { el.parentElement.querySelectorAll('.detail-thumb').forEach(t => t.classList.remove('active')); el.classList.add('active'); }
             function renderColourSwatches() {
@@ -6714,6 +6725,314 @@
                 showActionSuccess('🔄', 'Return Request Submitted', `Return request ${returnId} has been submitted for review. Reason: ${reason}`);
             }
         </script>
+        <!-- SIZING CHART MODAL -->
+        <div class="maintenance-overlay" id="sizingChartModal" style="z-index: 10001; background: rgba(0,0,0,0.8); display:none; padding: 20px; align-items:flex-start; overflow-y: auto;">
+            <div style="background: #fff; color: #333; max-width: 820px; width: 100%; border-radius: 10px; padding: 30px; position: relative; margin: 40px auto; text-align: left;">
+                <button style="position:absolute; top: 15px; right: 20px; border:none; background:none; font-size: 24px; cursor:pointer;" onclick="document.getElementById('sizingChartModal').style.display='none'">&times;</button>
+                <h2 style="font-size: 22px; font-weight:800; margin-bottom: 20px;">Sizing Chart Reference</h2>
+
+                <style>
+                    .sizing-table-container { overflow-x: auto; margin-bottom: 25px; }
+                    .sizing-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: center; }
+                    .sizing-table th { background: #f0f0f0; padding: 9px 7px; border: 1px solid #ddd; font-weight: 700; color: #333; white-space: nowrap; }
+                    .sizing-table td { padding: 7px; border: 1px solid #ddd; color: #555; }
+                    .sizing-table tr:hover td { background: #f9f9f9; }
+                    .sizing-section-title { color: #2196F3; font-size: 16px; font-weight: 700; margin: 0 0 6px 0; }
+                    .sizing-sub-title { font-size: 12px; margin-bottom: 8px; }
+                </style>
+
+                <!-- ===== CORPORATE BEIGE ===== -->
+                <div id="modalSizingCorpBeige" style="display:none;">
+                    <h3 class="sizing-section-title">Corporate Shirt – Beige</h3>
+                    <p class="sizing-sub-title"><strong>Male – Short Sleeve</strong></p>
+                    <div class="sizing-table-container">
+                        <table class="sizing-table">
+                            <tr><th>Size</th><th>Collar</th><th>Shoulder</th><th>Chest</th><th>Waist</th><th>Hip</th><th>Sleeve</th><th>Armhole</th><th>Cuff</th><th>Length</th></tr>
+                            <tr><td>S</td><td>15</td><td>17</td><td>38</td><td>36</td><td>38</td><td>10</td><td>17.5</td><td>13</td><td>28</td></tr>
+                            <tr><td>M</td><td>15.5</td><td>17.5</td><td>40</td><td>38</td><td>40</td><td>10</td><td>17.5</td><td>13.5</td><td>28</td></tr>
+                            <tr><td>L</td><td>16</td><td>18</td><td>42</td><td>40</td><td>42</td><td>10</td><td>18</td><td>14</td><td>29</td></tr>
+                            <tr><td>XL</td><td>16.5</td><td>18.5</td><td>44</td><td>42</td><td>44</td><td>10</td><td>18.5</td><td>15</td><td>29</td></tr>
+                            <tr><td>2XL</td><td>18</td><td>19.5</td><td>46</td><td>44</td><td>46</td><td>11</td><td>22</td><td>16</td><td>30</td></tr>
+                            <tr><td>3XL</td><td>19</td><td>20</td><td>50</td><td>46</td><td>50</td><td>12</td><td>23</td><td>17</td><td>31</td></tr>
+                            <tr><td>4XL</td><td>20</td><td>20.5</td><td>52</td><td>48</td><td>52</td><td>12</td><td>24</td><td>18</td><td>31</td></tr>
+                        </table>
+                    </div>
+
+                    <p class="sizing-sub-title"><strong>Female – ¾ Sleeve</strong></p>
+                    <div class="sizing-table-container">
+                        <table class="sizing-table">
+                            <tr><th>Size</th><th>Collar</th><th>Shoulder</th><th>Chest</th><th>Waist</th><th>Hip</th><th>Sleeve</th><th>Armhole</th><th>Cuff</th><th>Length</th></tr>
+                            <tr><td>XS</td><td>14</td><td>14.5</td><td>32</td><td>30</td><td>35</td><td>11.5</td><td>11.5</td><td>-</td><td>26</td></tr>
+                            <tr><td>S</td><td>14.5</td><td>15</td><td>34</td><td>32</td><td>37</td><td>12</td><td>12</td><td>-</td><td>26</td></tr>
+                            <tr><td>M</td><td>15</td><td>15.5</td><td>36</td><td>34</td><td>39</td><td>12</td><td>12.5</td><td>-</td><td>26</td></tr>
+                            <tr><td>L</td><td>16</td><td>16</td><td>38</td><td>36</td><td>41</td><td>13</td><td>14</td><td>-</td><td>27</td></tr>
+                            <tr><td>XL</td><td>17</td><td>16.5</td><td>40</td><td>38</td><td>43</td><td>13</td><td>14.5</td><td>-</td><td>27</td></tr>
+                            <tr><td>2XL</td><td>18</td><td>17</td><td>42</td><td>40</td><td>45</td><td>13.5</td><td>14.5</td><td>-</td><td>28</td></tr>
+                            <tr><td>3XL</td><td>19</td><td>18</td><td>44</td><td>42</td><td>47</td><td>13.5</td><td>15.5</td><td>-</td><td>28</td></tr>
+                            <tr><td>4XL</td><td>21</td><td>20</td><td>48</td><td>42</td><td>49</td><td>13.5</td><td>15.5</td><td>-</td><td>29</td></tr>
+                        </table>
+                    </div>
+
+                    <p class="sizing-sub-title"><strong>Female – Long Sleeve</strong></p>
+                    <div class="sizing-table-container">
+                        <table class="sizing-table">
+                            <tr><th>Size</th><th>Collar</th><th>Shoulder</th><th>Chest</th><th>Waist</th><th>Hip</th><th>Sleeve</th><th>Armhole</th><th>Cuff</th><th>Length</th></tr>
+                            <tr><td>2XS</td><td>14.5</td><td>14.5</td><td>32</td><td>28</td><td>35</td><td>22</td><td>15.5</td><td>9</td><td>24</td></tr>
+                            <tr><td>XS</td><td>15</td><td>14.5</td><td>34</td><td>30</td><td>37</td><td>22</td><td>16</td><td>9</td><td>26</td></tr>
+                            <tr><td>S</td><td>16.5</td><td>15.5</td><td>36</td><td>32</td><td>39</td><td>22</td><td>17</td><td>9.5</td><td>26</td></tr>
+                            <tr><td>M</td><td>18</td><td>16</td><td>40</td><td>34</td><td>41</td><td>22</td><td>18</td><td>10</td><td>27</td></tr>
+                            <tr><td>L</td><td>19</td><td>17.5</td><td>42</td><td>36</td><td>43</td><td>23</td><td>19.5</td><td>10</td><td>28</td></tr>
+                            <tr><td>XL</td><td>19.5</td><td>18</td><td>44</td><td>38</td><td>47</td><td>23</td><td>21.5</td><td>11</td><td>28</td></tr>
+                            <tr><td>2XL</td><td>21</td><td>19</td><td>46</td><td>40</td><td>49</td><td>23</td><td>21.5</td><td>12</td><td>28</td></tr>
+                        </table>
+                    </div>
+                </div> <!-- End Beige -->
+
+                <!-- ===== CORPORATE BLACK ===== -->
+                <div id="modalSizingCorpBlack" style="display:none;">
+                    <h3 class="sizing-section-title">Corporate Shirt – Black</h3>
+                    <p style="font-size:11px; color:#888; margin-bottom:12px; font-style:italic;">Note: Please ignore the colour of diagram. The actual colour will be black.</p>
+
+                    <p class="sizing-sub-title"><strong>Male – Short Sleeve</strong></p>
+                    <div class="sizing-table-container">
+                        <table class="sizing-table">
+                            <tr><th>Size</th><th>Collar</th><th>Shoulder</th><th>Chest</th><th>Waist</th><th>Hip</th><th>Sleeve</th><th>Armhole</th><th>Cuff</th><th>Length</th></tr>
+                            <tr><td>S</td><td>14.5</td><td>17</td><td>40</td><td>40</td><td>40</td><td>10</td><td>20.5</td><td>14</td><td>26.5</td></tr>
+                            <tr><td>M</td><td>15</td><td>18</td><td>42</td><td>42</td><td>42</td><td>10.25</td><td>21</td><td>14</td><td>27</td></tr>
+                            <tr><td>L</td><td>15.5</td><td>18.25</td><td>44</td><td>44</td><td>44</td><td>10.5</td><td>21.5</td><td>14.5</td><td>27</td></tr>
+                            <tr><td>XL</td><td>16</td><td>19</td><td>46</td><td>46</td><td>46</td><td>10.75</td><td>22</td><td>15</td><td>28</td></tr>
+                            <tr><td>2XL</td><td>17</td><td>20</td><td>50</td><td>48</td><td>50</td><td>10.75</td><td>23</td><td>16</td><td>29</td></tr>
+                            <tr><td>3XL</td><td>18</td><td>21.5</td><td>54</td><td>50</td><td>54</td><td>10.75</td><td>23.5</td><td>16.5</td><td>29</td></tr>
+                            <tr><td>4XL</td><td>19</td><td>22.5</td><td>56</td><td>52</td><td>56</td><td>11</td><td>24</td><td>17</td><td>30.5</td></tr>
+                        </table>
+                    </div>
+
+                    <p class="sizing-sub-title"><strong>Female – ¾ Sleeve</strong></p>
+                    <div class="sizing-table-container">
+                        <table class="sizing-table">
+                            <tr><th>Size</th><th>Collar</th><th>Shoulder</th><th>Chest</th><th>Waist</th><th>Hip</th><th>Sleeve</th><th>Armhole</th><th>Cuff</th><th>Length</th></tr>
+                            <tr><td>XS</td><td>14</td><td>14.5</td><td>32</td><td>30</td><td>38</td><td>11.5</td><td>13.5</td><td>-</td><td>25</td></tr>
+                            <tr><td>S</td><td>14.5</td><td>15</td><td>34</td><td>32</td><td>38</td><td>12</td><td>14.5</td><td>-</td><td>25</td></tr>
+                            <tr><td>M</td><td>15</td><td>15.5</td><td>36</td><td>34</td><td>42</td><td>12.5</td><td>14.5</td><td>-</td><td>26</td></tr>
+                            <tr><td>L</td><td>15.5</td><td>15.5</td><td>38</td><td>36</td><td>43</td><td>13</td><td>16.5</td><td>-</td><td>26</td></tr>
+                            <tr><td>XL</td><td>16</td><td>16</td><td>40</td><td>38</td><td>44</td><td>14</td><td>17.5</td><td>-</td><td>27</td></tr>
+                            <tr><td>2XL</td><td>16.5</td><td>16.5</td><td>42</td><td>42</td><td>46</td><td>14.5</td><td>18</td><td>-</td><td>27</td></tr>
+                            <tr><td>3XL</td><td>17</td><td>17</td><td>44</td><td>44</td><td>48</td><td>15.5</td><td>20.5</td><td>-</td><td>27</td></tr>
+                        </table>
+                    </div>
+
+                    <p class="sizing-sub-title"><strong>Female – Long Sleeve</strong></p>
+                    <div class="sizing-table-container">
+                        <table class="sizing-table">
+                            <tr><th>Size</th><th>Collar</th><th>Shoulder</th><th>Chest</th><th>Waist</th><th>Hip</th><th>Sleeve</th><th>Armhole</th><th>Cuff</th><th>Length</th></tr>
+                            <tr><td>XS</td><td>14</td><td>14</td><td>32</td><td>30</td><td>34</td><td>22</td><td>13.5</td><td>9</td><td>25</td></tr>
+                            <tr><td>S</td><td>14.5</td><td>14.5</td><td>34</td><td>32</td><td>36</td><td>22.5</td><td>15.5</td><td>9.5</td><td>24</td></tr>
+                            <tr><td>M</td><td>15</td><td>15</td><td>36</td><td>34</td><td>38</td><td>23</td><td>16.5</td><td>7.5</td><td>24.5</td></tr>
+                            <tr><td>L</td><td>15.5</td><td>15.5</td><td>38</td><td>36</td><td>40</td><td>23.5</td><td>17.5</td><td>8</td><td>25</td></tr>
+                            <tr><td>XL</td><td>16</td><td>16</td><td>40</td><td>38</td><td>42</td><td>24</td><td>18.5</td><td>8.5</td><td>25.5</td></tr>
+                            <tr><td>2XL</td><td>16.5</td><td>16.5</td><td>42</td><td>40</td><td>46</td><td>25</td><td>19.5</td><td>9</td><td>26.5</td></tr>
+                            <tr><td>3XL</td><td>17</td><td>17</td><td>46</td><td>44</td><td>48</td><td>25.5</td><td>20.5</td><td>9.5</td><td>27</td></tr>
+                        </table>
+                    </div>
+                </div> <!-- End Black -->
+
+                <!-- ===== POLO SHIRT ===== -->
+                <div id="modalSizingPolo" style="display:none;">
+                    <h3 class="sizing-section-title">Polo Shirt</h3>
+                    <div class="sizing-table-container">
+                        <table class="sizing-table">
+                            <tr><th>Size</th><th>Shoulder</th><th>Chest</th><th>Sleeve</th><th>Length</th></tr>
+                            <tr><td>2XS</td><td>15</td><td>34</td><td>7</td><td>25</td></tr>
+                            <tr><td>XS</td><td>16</td><td>36</td><td>7.5</td><td>26</td></tr>
+                            <tr><td>S</td><td>17</td><td>38</td><td>8</td><td>27</td></tr>
+                            <tr><td>M</td><td>18</td><td>40</td><td>8.5</td><td>28</td></tr>
+                            <tr><td>L</td><td>19</td><td>42</td><td>9</td><td>29</td></tr>
+                            <tr><td>XL</td><td>20</td><td>44</td><td>9.5</td><td>30</td></tr>
+                            <tr><td>2XL</td><td>21</td><td>46</td><td>10</td><td>31</td></tr>
+                            <tr><td>3XL</td><td>22</td><td>48</td><td>10.5</td><td>32</td></tr>
+                            <tr><td>4XL</td><td>23</td><td>50</td><td>11</td><td>33</td></tr>
+                            <tr><td>5XL</td><td>24</td><td>52</td><td>11.5</td><td>34</td></tr>
+                            <tr><td>6XL</td><td>25</td><td>54</td><td>12</td><td>35</td></tr>
+                        </table>
+                    </div>
+                </div> <!-- End Polo -->
+
+                <!-- ===== POWER TO GROW (PTG) ===== -->
+                <div id="modalSizingPTG" style="display:none;">
+                    <h3 class="sizing-section-title">Power To Grow – Round Neck</h3>
+                    <div class="sizing-table-container">
+                        <table class="sizing-table">
+                            <tr><th>Size</th><th>Chest</th><th>Length</th><th>Shoulder</th><th>Sleeve</th></tr>
+                            <tr><td>XXS</td><td>34"</td><td>23"</td><td>16"</td><td>6.5"</td></tr>
+                            <tr><td>XS</td><td>36"</td><td>25"</td><td>16"</td><td>7.0"</td></tr>
+                            <tr><td>S</td><td>38"</td><td>26"</td><td>17"</td><td>7.5"</td></tr>
+                            <tr><td>M</td><td>40"</td><td>27"</td><td>18"</td><td>8.0"</td></tr>
+                            <tr><td>L</td><td>42"</td><td>28"</td><td>19"</td><td>8.5"</td></tr>
+                            <tr><td>XL</td><td>44"</td><td>29"</td><td>20"</td><td>9.0"</td></tr>
+                            <tr><td>2XL</td><td>46"</td><td>30"</td><td>21"</td><td>9.5"</td></tr>
+                            <tr><td>3XL</td><td>48"</td><td>31"</td><td>22"</td><td>10.0"</td></tr>
+                            <tr><td>4XL</td><td>50"</td><td>32"</td><td>23"</td><td>10.5"</td></tr>
+                            <tr><td>5XL</td><td>52"</td><td>33"</td><td>24"</td><td>11.0"</td></tr>
+                            <tr><td>7XL</td><td>56"</td><td>35"</td><td>26"</td><td>11.5"</td></tr>
+                        </table>
+                    </div>
+                </div> <!-- End PTG -->
+
+                <!-- ===== TECHNICAL UNIFORM (GREY) ===== -->
+                <div id="modalSizingTechGrey" style="display:none;">
+                    <style>
+                        #modalSizingTechGrey .sizing-table { font-size: 11px; }
+                        #modalSizingTechGrey .sizing-table th { padding: 6px 4px; white-space: normal; word-break: break-word; }
+                        #modalSizingTechGrey .sizing-table td { padding: 5px 4px; }
+                    </style>
+                    <h3 class="sizing-section-title">Technical Uniform – Grey</h3>
+
+                    <!-- Male Short Sleeve -->
+                    <p class="sizing-sub-title"><strong>Male – Short Sleeve</strong></p>
+                    <div class="sizing-table-container">
+                        <table class="sizing-table">
+                            <tr><th>Size</th><th>Collar</th><th>Shoulder</th><th>Chest</th><th>Waist</th><th>Hip</th><th>Sleeve</th><th>Armhole</th><th>Cuff</th><th>Length</th></tr>
+                            <tr><td>XS</td><td>14.5</td><td>16</td><td>36</td><td>36</td><td>36</td><td>8.5</td><td>17</td><td>13</td><td>27</td></tr>
+                            <tr><td>S</td><td>15</td><td>17</td><td>38</td><td>38</td><td>38</td><td>9</td><td>18</td><td>14</td><td>28</td></tr>
+                            <tr><td>M</td><td>15.5</td><td>18</td><td>40</td><td>40</td><td>40</td><td>9.5</td><td>19</td><td>14.5</td><td>29</td></tr>
+                            <tr><td>L</td><td>16</td><td>19</td><td>42</td><td>42</td><td>42</td><td>10</td><td>20</td><td>15</td><td>30</td></tr>
+                            <tr><td>XL</td><td>16.5</td><td>20</td><td>44</td><td>44</td><td>44</td><td>10.5</td><td>21</td><td>15.5</td><td>31</td></tr>
+                            <tr><td>2XL</td><td>17</td><td>21</td><td>46</td><td>46</td><td>46</td><td>11</td><td>22</td><td>16</td><td>31</td></tr>
+                            <tr><td>3XL</td><td>17.5</td><td>22</td><td>48</td><td>48</td><td>48</td><td>11</td><td>23.5</td><td>16.5</td><td>31</td></tr>
+                            <tr><td>4XL</td><td>17.5</td><td>23</td><td>50</td><td>50</td><td>50</td><td>11</td><td>24.5</td><td>17</td><td>31</td></tr>
+                        </table>
+                    </div>
+
+                    <!-- Male Long Sleeve -->
+                    <p class="sizing-sub-title"><strong>Male – Long Sleeve</strong></p>
+                    <div class="sizing-table-container">
+                        <table class="sizing-table">
+                            <tr><th>Size</th><th>Collar</th><th>Shoulder</th><th>Chest</th><th>Waist</th><th>Hip</th><th>Sleeve</th><th>Armhole</th><th>Cuff</th><th>Length</th></tr>
+                            <tr><td>XS</td><td>14.5</td><td>16</td><td>36</td><td>36</td><td>36</td><td>22</td><td>17</td><td>13</td><td>27</td></tr>
+                            <tr><td>S</td><td>15</td><td>17</td><td>38</td><td>38</td><td>38</td><td>22</td><td>18</td><td>9</td><td>28</td></tr>
+                            <tr><td>M</td><td>15.5</td><td>18</td><td>40</td><td>40</td><td>40</td><td>23</td><td>19</td><td>9.5</td><td>29</td></tr>
+                            <tr><td>L</td><td>16</td><td>19</td><td>42</td><td>42</td><td>42</td><td>24</td><td>20</td><td>10</td><td>30</td></tr>
+                            <tr><td>XL</td><td>16.5</td><td>20</td><td>44</td><td>44</td><td>44</td><td>24</td><td>21</td><td>10.5</td><td>31</td></tr>
+                            <tr><td>2XL</td><td>17</td><td>21</td><td>46</td><td>46</td><td>46</td><td>24.5</td><td>22</td><td>11</td><td>31</td></tr>
+                            <tr><td>3XL</td><td>17.5</td><td>22</td><td>48</td><td>48</td><td>48</td><td>24.5</td><td>23.5</td><td>11.5</td><td>31</td></tr>
+                            <tr><td>4XL</td><td>17.5</td><td>23</td><td>50</td><td>50</td><td>50</td><td>24.5</td><td>24.5</td><td>12</td><td>31</td></tr>
+                        </table>
+                    </div>
+
+                    <!-- Female Long Sleeve -->
+                    <p class="sizing-sub-title"><strong>Female – Long Sleeve</strong></p>
+                    <div class="sizing-table-container">
+                        <table class="sizing-table">
+                            <tr><th>Size</th><th>Collar</th><th>Shoulder</th><th>Chest</th><th>Waist</th><th>Hip</th><th>Sleeve</th><th>Armhole</th><th>Cuff</th><th>Length</th></tr>
+                            <tr><td>2XS</td><td>14</td><td>14</td><td>31</td><td>27</td><td>34</td><td>22</td><td>16</td><td>8</td><td>28</td></tr>
+                            <tr><td>XS</td><td>14</td><td>14.5</td><td>33</td><td>29</td><td>36</td><td>22</td><td>17</td><td>8</td><td>28</td></tr>
+                            <tr><td>S</td><td>14</td><td>15</td><td>35</td><td>31</td><td>38</td><td>23</td><td>18</td><td>9</td><td>29</td></tr>
+                            <tr><td>M</td><td>14.5</td><td>15.5</td><td>37</td><td>33</td><td>40</td><td>23</td><td>19</td><td>9</td><td>29</td></tr>
+                            <tr><td>L</td><td>15</td><td>16</td><td>39</td><td>35</td><td>42</td><td>23.5</td><td>20</td><td>9</td><td>30</td></tr>
+                            <tr><td>XL</td><td>15.5</td><td>16.5</td><td>41</td><td>37</td><td>44</td><td>23.5</td><td>21</td><td>10</td><td>30</td></tr>
+                            <tr><td>2XL</td><td>16</td><td>17</td><td>43</td><td>39</td><td>46</td><td>24</td><td>22</td><td>10</td><td>31</td></tr>
+                            <tr><td>3XL</td><td>16.5</td><td>17.5</td><td>45</td><td>41</td><td>48</td><td>24</td><td>23</td><td>10</td><td>31</td></tr>
+                        </table>
+                    </div>
+
+                    <!-- Pants Size (shared with Orange) -->
+                    <p class="sizing-sub-title"><strong>Pants Size – Waist 26–35 (inches)</strong></p>
+                    <div class="sizing-table-container">
+                        <table class="sizing-table">
+                            <tr><th>Waist</th><th>Hip</th><th>Thigh</th><th>Crotch</th><th>Bottom Cuff</th></tr>
+                            <tr><td>26</td><td>39</td><td>24</td><td>25</td><td>16</td></tr>
+                            <tr><td>27</td><td>39.5</td><td>24</td><td>26</td><td>16</td></tr>
+                            <tr><td>28</td><td>40</td><td>25</td><td>26.5</td><td>16</td></tr>
+                            <tr><td>29</td><td>40.5</td><td>25.5</td><td>27</td><td>16.5</td></tr>
+                            <tr><td>30</td><td>41</td><td>26</td><td>27</td><td>16.5</td></tr>
+                            <tr><td>31</td><td>41.5</td><td>26.5</td><td>27.5</td><td>17</td></tr>
+                            <tr><td>32</td><td>42.5</td><td>27</td><td>27.5</td><td>17</td></tr>
+                            <tr><td>33</td><td>44</td><td>27</td><td>28</td><td>17</td></tr>
+                            <tr><td>34</td><td>44.5</td><td>27.5</td><td>28.5</td><td>17.5</td></tr>
+                            <tr><td>35</td><td>45</td><td>28</td><td>29</td><td>17.5</td></tr>
+                        </table>
+                    </div>
+
+                    <p class="sizing-sub-title"><strong>Pants Size – Waist 36–44 (inches)</strong></p>
+                    <div class="sizing-table-container">
+                        <table class="sizing-table">
+                            <tr><th>Waist</th><th>Hip</th><th>Thigh</th><th>Crotch</th><th>Bottom Cuff</th></tr>
+                            <tr><td>36</td><td>45.5</td><td>28.5</td><td>29.5</td><td>18</td></tr>
+                            <tr><td>37</td><td>46</td><td>29</td><td>30</td><td>18</td></tr>
+                            <tr><td>38</td><td>47</td><td>29.5</td><td>30.5</td><td>18.5</td></tr>
+                            <tr><td>39</td><td>48</td><td>30</td><td>31</td><td>18.5</td></tr>
+                            <tr><td>40</td><td>51</td><td>31.5</td><td>31</td><td>18.5</td></tr>
+                            <tr><td>41</td><td>51</td><td>32</td><td>31.5</td><td>18.5</td></tr>
+                            <tr><td>42</td><td>52.5</td><td>32.5</td><td>31.5</td><td>19</td></tr>
+                            <tr><td>43</td><td>52.5</td><td>33</td><td>32</td><td>19</td></tr>
+                            <tr><td>44</td><td>56</td><td>33.5</td><td>32.5</td><td>19.5</td></tr>
+                        </table>
+                    </div>
+                </div> <!-- End Tech Grey -->
+
+                <!-- ===== TECHNICAL UNIFORM (ORANGE) ===== -->
+                <div id="modalSizingTechOrange" style="display:none;">
+                    <h3 class="sizing-section-title">Technical Uniform – Orange</h3>
+
+                    <!-- Jacket Unisex Long Sleeve -->
+                    <p class="sizing-sub-title"><strong>Jacket – Unisex Long Sleeve</strong></p>
+                    <div class="sizing-table-container">
+                        <table class="sizing-table">
+                            <tr><th>Size</th><th>Collar</th><th>Shoulder</th><th>Chest</th><th>Waist</th><th>Armhole</th><th>Cuff</th><th>Sleeve</th><th>Length</th><th>Hip</th></tr>
+                            <tr><td>2XS</td><td>14</td><td>16.5</td><td>36</td><td>34</td><td>17</td><td>8</td><td>21.5</td><td>26.5</td><td>36</td></tr>
+                            <tr><td>XS</td><td>14.5</td><td>17</td><td>38</td><td>36</td><td>18</td><td>8.5</td><td>22</td><td>27</td><td>38</td></tr>
+                            <tr><td>S</td><td>15</td><td>17.5</td><td>40</td><td>38</td><td>19</td><td>9</td><td>22.5</td><td>27.5</td><td>40</td></tr>
+                            <tr><td>M</td><td>15.5</td><td>18</td><td>42</td><td>40</td><td>20</td><td>9.5</td><td>23</td><td>28</td><td>42</td></tr>
+                            <tr><td>L</td><td>16</td><td>18.5</td><td>44</td><td>42</td><td>21</td><td>10</td><td>23.5</td><td>28.5</td><td>44</td></tr>
+                            <tr><td>XL</td><td>16.5</td><td>19</td><td>46</td><td>44</td><td>22</td><td>10.5</td><td>24</td><td>29</td><td>46</td></tr>
+                            <tr><td>2XL</td><td>17</td><td>19.5</td><td>48</td><td>46</td><td>23</td><td>11</td><td>24.5</td><td>29.5</td><td>48</td></tr>
+                            <tr><td>3XL</td><td>17.5</td><td>20</td><td>50</td><td>48</td><td>24</td><td>11.5</td><td>25</td><td>30</td><td>50</td></tr>
+                            <tr><td>4XL</td><td>18</td><td>20.5</td><td>52</td><td>50</td><td>25</td><td>12</td><td>25.5</td><td>30.5</td><td>52</td></tr>
+                        </table>
+                    </div>
+
+                    <!-- Pants Size (shared with Grey) -->
+                    <p class="sizing-sub-title"><strong>Pants Size – Waist 26–35 (inches)</strong></p>
+                    <div class="sizing-table-container">
+                        <table class="sizing-table">
+                            <tr><th>Waist</th><th>Hip</th><th>Thigh</th><th>Crotch</th><th>Bottom Cuff</th></tr>
+                            <tr><td>26</td><td>39</td><td>24</td><td>25</td><td>16</td></tr>
+                            <tr><td>27</td><td>39.5</td><td>24</td><td>26</td><td>16</td></tr>
+                            <tr><td>28</td><td>40</td><td>25</td><td>26.5</td><td>16</td></tr>
+                            <tr><td>29</td><td>40.5</td><td>25.5</td><td>27</td><td>16.5</td></tr>
+                            <tr><td>30</td><td>41</td><td>26</td><td>27</td><td>16.5</td></tr>
+                            <tr><td>31</td><td>41.5</td><td>26.5</td><td>27.5</td><td>17</td></tr>
+                            <tr><td>32</td><td>42.5</td><td>27</td><td>27.5</td><td>17</td></tr>
+                            <tr><td>33</td><td>44</td><td>27</td><td>28</td><td>17</td></tr>
+                            <tr><td>34</td><td>44.5</td><td>27.5</td><td>28.5</td><td>17.5</td></tr>
+                            <tr><td>35</td><td>45</td><td>28</td><td>29</td><td>17.5</td></tr>
+                        </table>
+                    </div>
+
+                    <p class="sizing-sub-title"><strong>Pants Size – Waist 36–44 (inches)</strong></p>
+                    <div class="sizing-table-container">
+                        <table class="sizing-table">
+                            <tr><th>Waist</th><th>Hip</th><th>Thigh</th><th>Crotch</th><th>Bottom Cuff</th></tr>
+                            <tr><td>36</td><td>45.5</td><td>28.5</td><td>29.5</td><td>18</td></tr>
+                            <tr><td>37</td><td>46</td><td>29</td><td>30</td><td>18</td></tr>
+                            <tr><td>38</td><td>47</td><td>29.5</td><td>30.5</td><td>18.5</td></tr>
+                            <tr><td>39</td><td>48</td><td>30</td><td>31</td><td>18.5</td></tr>
+                            <tr><td>40</td><td>51</td><td>31.5</td><td>31</td><td>18.5</td></tr>
+                            <tr><td>41</td><td>51</td><td>32</td><td>31.5</td><td>18.5</td></tr>
+                            <tr><td>42</td><td>52.5</td><td>32.5</td><td>31.5</td><td>19</td></tr>
+                            <tr><td>43</td><td>52.5</td><td>33</td><td>32</td><td>19</td></tr>
+                            <tr><td>44</td><td>56</td><td>33.5</td><td>32.5</td><td>19.5</td></tr>
+                        </table>
+                    </div>
+                </div> <!-- End Tech Orange -->
+
+                <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; text-align: right;">
+                    <button class="btn-detail-back" onclick="document.getElementById('sizingChartModal').style.display='none'">← Back</button>
+                </div>
+            </div>
+        </div>
+
+
     </body>
 
     </html>
