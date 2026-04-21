@@ -1,846 +1,515 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        
+        /* SHIRT LISTING */
+            .listing-banner {
+                background: linear-gradient(135deg, #c8d83e, #a8c836, #7bb82e);
+                padding: 25px 40px;
+                border-bottom: 3px solid #2196F3;
+            }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f0f0;
-            color: #333;
-            font-size: 14px;
-        }
+            .listing-banner h1 {
+                font-size: 24px;
+                font-weight: 700;
+                color: #222;
+            }
 
-        .page {
-            display: none;
-        }
+            .listing-banner p {
+                font-size: 13px;
+                color: #555;
+                margin-top: 4px;
+            }
 
-        .page.active {
-            display: block;
-            animation: pageFade 0.4s ease;
-        }
+            .listing-container {
+                max-width: 1100px;
+                margin: 25px auto;
+                padding: 30px;
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            }
 
-        @keyframes pageFade {
-            from {
+            .product-grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 25px;
+                margin-bottom: 30px;
+            }
+
+            .product-card {
+                background: #fff;
+                border: 1px solid #e0e0e0;
+                border-radius: 10px;
+                padding: 20px 15px;
+                text-align: center;
+                transition: all 0.3s;
+                cursor: pointer;
+            }
+
+            .product-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+                border-color: #2196F3;
+            }
+
+            .product-image {
+                width: 100%;
+                height: 180px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 15px;
+            }
+
+            .svg-icon {
+                width: 120px;
+                height: 140px;
+                transition: transform 0.3s;
+            }
+
+            .product-card:hover .svg-icon {
+                transform: scale(1.05);
+            }
+
+            .product-name {
+                font-size: 14px;
+                font-weight: 600;
+                color: #444;
+                margin-bottom: 12px;
+                min-height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .btn-view {
+                padding: 8px 20px;
+                background: #fff;
+                color: #2196F3;
+                border: 2px solid #2196F3;
+                border-radius: 5px;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s;
+            }
+
+            .btn-view:hover {
+                background: #2196F3;
+                color: #fff;
+            }
+
+            .cart-badge {
+                position: fixed;
+                top: 72px;
+                right: 25px;
+                background: #2196F3;
+                color: #fff;
+                width: 55px;
+                height: 55px;
+                border-radius: 50%;
+                display: none;
+                align-items: center;
+                justify-content: center;
+                font-size: 20px;
+                box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);
+                cursor: pointer;
+                z-index: 500;
+                transition: transform 0.3s;
+            }
+
+            .cart-badge:hover {
+                transform: scale(1.1);
+            }
+
+            .cart-count-badge {
+                position: absolute;
+                top: -5px;
+                right: -5px;
+                background: #f44336;
+                color: #fff;
+                width: 22px;
+                height: 22px;
+                border-radius: 50%;
+                font-size: 12px;
+                font-weight: 700;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .proceed-bar {
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                gap: 15px;
+                margin-top: 20px;
+                padding-top: 20px;
+                border-top: 1px solid #e0e0e0;
+            }
+
+            .cart-info {
+                font-size: 14px;
+                color: #666;
+            }
+
+            .cart-info strong {
+                color: #333;
+            }
+
+            .btn-proceed {
+                padding: 12px 35px;
+                border: none;
+                background: linear-gradient(135deg, #333, #555);
+                color: #fff;
+                font-size: 15px;
+                font-weight: 600;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: all 0.3s;
+            }
+
+            .btn-proceed:hover {
+                background: linear-gradient(135deg, #222, #444);
+                transform: translateY(-2px);
+            }
+
+            .btn-proceed:disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+                transform: none;
+            }
+
+            /* SHIRT DETAIL */
+            .detail-category-bar {
+                background: #4fc3f7;
+                color: #fff;
+                padding: 12px 40px;
+                font-size: 14px;
+                font-weight: 600;
+            }
+
+            .detail-container {
+                max-width: 1100px;
+                margin: 0 auto;
+                padding: 30px;
+                background: #fff;
+                min-height: 60vh;
+            }
+
+            .detail-title {
+                font-size: 22px;
+                font-weight: 800;
+                color: #222;
+                margin-bottom: 25px;
+                padding-bottom: 15px;
+                border-bottom: 2px solid #f0f0f0;
+            }
+
+            .detail-layout {
+                display: flex;
+                gap: 40px;
+                align-items: flex-start;
+                padding: 20px;
+                background: #fff;
+                border-radius: 12px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            }
+
+            .detail-image-area {
+                flex: 0 0 320px;
+            }
+
+            .detail-main-image {
+                width: 320px;
+                height: 380px;
+                border: 2px solid #e0e0e0;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #fafafa;
+                overflow: hidden;
+                margin-bottom: 20px;
+                position: relative;
+                transition: border-color 0.3s;
+            }
+
+            .detail-main-image .placeholder-svg {
+                width: 200px;
+                height: 240px;
+            }
+
+            .detail-main-image .upload-overlay {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(0, 0, 0, 0.6);
+                color: #fff;
+                text-align: center;
+                padding: 8px;
+                font-size: 12px;
+                cursor: pointer;
                 opacity: 0;
-                transform: translateY(10px);
+                transition: opacity 0.3s;
             }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        @keyframes scaleIn {
-            from {
-                transform: scale(0);
-            }
-
-            to {
-                transform: scale(1);
-            }
-        }
-
-        @keyframes checkDraw {
-            from {
-                stroke-dashoffset: 50;
-            }
-
-            to {
-                stroke-dashoffset: 0;
-            }
-        }
-
-        @keyframes confettiFall {
-            0% {
-                transform: translateY(-10px) rotate(0);
+            .detail-main-image:hover .upload-overlay {
                 opacity: 1;
             }
 
-            100% {
-                transform: translateY(80px) rotate(720deg);
-                opacity: 0;
-            }
-        }
-
-        @keyframes slideDown {
-            from {
-                transform: translateY(-30px);
-                opacity: 0;
+            .detail-thumbnails {
+                display: flex;
+                gap: 8px;
+                flex-wrap: wrap;
             }
 
-            to {
-                transform: translateY(0);
-                opacity: 1;
+            .detail-thumb {
+                width: 60px;
+                height: 60px;
+                border: 2px solid #ddd;
+                border-radius: 6px;
+                overflow: hidden;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #fafafa;
+                transition: all 0.2s;
             }
-        }
 
-        @keyframes pulse {
-
-            0%,
-            100% {
-                transform: scale(1)
+            .detail-thumb:hover,
+            .detail-thumb.active {
+                border-color: #2196F3;
+                box-shadow: 0 2px 8px rgba(33, 150, 243, 0.2);
             }
 
-            50% {
-                transform: scale(1.05)
+            .detail-thumb svg {
+                width: 40px;
+                height: 45px;
             }
-        }
 
-        /* ===== ROLE SWITCHER ===== */
-        .role-switcher {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 9999;
-            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
-            padding: 0;
-            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 52px;
-        }
-
-        .role-switcher .rs-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding-left: 20px;
-        }
-
-        .role-switcher .rs-logo {
-            font-size: 14px;
-            font-weight: 800;
-            color: #4fc3f7;
-            letter-spacing: 1px;
-        }
-
-        .role-switcher .rs-divider {
-            width: 1px;
-            height: 28px;
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .role-switcher .rs-label {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.5);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .role-tabs {
-            display: flex;
-            gap: 4px;
-            padding: 0 8px;
-        }
-
-        .role-tab {
-            padding: 8px 20px;
-            border: none;
-            background: transparent;
-            color: rgba(255, 255, 255, 0.55);
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            border-radius: 6px 6px 0 0;
-            transition: all 0.3s;
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .role-tab:hover {
-            color: rgba(255, 255, 255, 0.85);
-            background: rgba(255, 255, 255, 0.06);
-        }
-
-        .role-tab.active {
-            color: #fff;
-            background: rgba(255, 255, 255, 0.12);
-            border-bottom: 2px solid #4fc3f7;
-        }
-
-        .role-tab .tab-icon {
-            font-size: 16px;
-        }
-
-        .role-tab .notif-dot {
-            width: 18px;
-            height: 18px;
-            background: #f44336;
-            border-radius: 50%;
-            font-size: 10px;
-            font-weight: 700;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .rs-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding-right: 20px;
-        }
-
-        .rs-user {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 12px;
-        }
-
-        .rs-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #4fc3f7, #29b6f6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-weight: 700;
-            font-size: 13px;
-        }
-
-        body {
-            padding-top: 52px;
-        }
-
-
-
-        /* ===== BREADCRUMB ===== */
-        .breadcrumb-bar {
-            background: #fff;
-            padding: 10px 30px;
-            border-bottom: 1px solid #e0e0e0;
-            display: none;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            position: sticky;
-            top: 52px;
-            z-index: 100;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            flex-wrap: wrap;
-        }
-
-        .breadcrumb-bar.visible {
-            display: flex;
-        }
-
-        .bc-item {
-            color: #999;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            transition: color 0.2s;
-            white-space: nowrap;
-        }
-
-        .bc-item:hover {
-            color: #2196F3;
-        }
-
-        .bc-item.active {
-            color: #333;
-            font-weight: 600;
-            cursor: default;
-        }
-
-        .bc-item.done {
-            color: #4CAF50;
-        }
-
-        .bc-step {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: #e0e0e0;
-            color: #999;
-            font-size: 11px;
-            font-weight: 700;
-        }
-
-        .bc-item.active .bc-step {
-            background: #2196F3;
-            color: #fff;
-        }
-
-        .bc-item.done .bc-step {
-            background: #4CAF50;
-            color: #fff;
-        }
-
-        .bc-sep {
-            color: #ccc;
-            font-size: 16px;
-        }
-
-        /* ===== HOME ===== */
-        .top-bar {
-            background: #333;
-            color: #999;
-            padding: 8px 30px;
-            font-size: 12px;
-        }
-
-        .header-section {
-            background: linear-gradient(160deg, #c8e06e, #d4e88a, #e0eda0, #d8e890, #c0d868);
-            padding: 30px 40px 20px;
-            position: relative;
-        }
-
-        .header-section::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse at 20% 50%, rgba(255, 255, 255, 0.2), transparent 50%),
-                radial-gradient(ellipse at 80% 30%, rgba(255, 255, 255, 0.15), transparent 50%);
-            pointer-events: none;
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-            z-index: 2;
-            max-width: 1100px;
-            margin: 0 auto;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .logo-text {
-            font-size: 24px;
-            font-weight: 900;
-            color: #333;
-        }
-
-        .home-btn-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .btn-create-request {
-            padding: 10px 24px;
-            background: #333;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .btn-create-request:hover {
-            background: linear-gradient(135deg, #43A047, #5cb860);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
-        }
-
-        .btn-new-joiner-home {
-            padding: 10px 24px;
-            background: linear-gradient(135deg, #4CAF50, #66BB6A);
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-new-joiner-home:hover {
-            background: linear-gradient(135deg, #43A047, #5cb860);
-            transform: translateY(-1px);
-        }
-
-        .hero-banner {
-            background: linear-gradient(160deg, #b8cc70, #a8c060, #98b050, #b0c468, #c0d070);
-            padding: 40px;
-            position: relative;
-        }
-
-        .hero-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1100px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 2;
-            flex-wrap: wrap;
-            gap: 25px;
-        }
-
-        .hero-text {
-            flex: 0 1 450px;
-        }
-
-        .hero-text h1 {
-            font-size: 28px;
-            font-weight: 900;
-            color: #222;
-            line-height: 1.3;
-            margin-bottom: 8px;
-        }
-
-        .hero-text p {
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 20px;
-        }
-
-        .btn-joiner-kit {
-            padding: 10px 24px;
-            background: #333;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .btn-joiner-kit:hover {
-            background: linear-gradient(135deg, #43A047, #5cb860);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
-        }
-
-        .btn-joiner-kit small {
-            display: block;
-            font-size: 11px;
-            font-weight: 400;
-            margin-top: 4px;
-        }
-
-        .hero-images {
-            flex: 0 1 500px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
-            gap: 10px;
-        }
-
-        .shirt-placeholder {
-            width: 140px;
-            height: 180px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 11px;
-            text-align: center;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .shirt-placeholder:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .shirt-placeholder.vest {
-            background: linear-gradient(135deg, #ff6600, #ff4400);
-            height: 200px;
-        }
-
-        .shirt-placeholder.beige {
-            background: linear-gradient(135deg, #c8b896, #b0a080);
-        }
-
-        .shirt-placeholder.dark {
-            background: linear-gradient(135deg, #2c3e50, #34495e);
-        }
-
-        .bottom-section {
-            display: flex;
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 30px 40px;
-            gap: 40px;
-            flex-wrap: wrap;
-        }
-
-        .category-section {
-            flex: 0 1 400px;
-        }
-
-        .category-section h2 {
-            font-size: 18px;
-            font-weight: 900;
-            margin-bottom: 20px;
-            color: #222;
-        }
-
-        .category-grid {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .category-card {
-            width: 120px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            overflow: hidden;
-            text-align: center;
-            background: #fff;
-            cursor: pointer;
-            transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
-        }
-
-        .category-card:hover {
-            border-color: #4fc3f7;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            transform: translateY(-3px);
-        }
-
-        .category-card .card-img {
-            width: 100%;
-            height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            color: #fff;
-            font-weight: 600;
-        }
-
-        .card-img.technical {
-            background: linear-gradient(135deg, #ff6600, #ff4400);
-        }
-
-        .card-img.corporate {
-            background: linear-gradient(135deg, #c8b896, #b0a080);
-        }
-
-        .card-img.ptg {
-            background: linear-gradient(135deg, #2c3e50, #34495e);
-        }
-
-        .category-card .card-label {
-            padding: 8px 5px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .status-section {
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .status-card {
-            background: #f0f0f0;
-            border-radius: 12px;
-            padding: 20px 25px;
-        }
-
-        .status-card h2 {
-            font-size: 18px;
-            font-weight: 900;
-            margin-bottom: 15px;
-            color: #222;
-        }
-
-        .status-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 15px;
-            background: #fff;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: box-shadow 0.3s, transform 0.2s;
-        }
-
-        .status-row:hover {
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            transform: translateX(3px);
-        }
-
-        .status-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .status-icon {
-            font-size: 20px;
-            width: 28px;
-            text-align: center;
-        }
-
-        .status-label {
-            font-size: 15px;
-            font-weight: 700;
-        }
-
-        .status-count {
-            font-size: 20px;
-            font-weight: 900;
-        }
-
-        .status-row.draft .status-label,
-        .status-row.draft .status-count {
-            color: #333;
-        }
-
-        .status-row.pending .status-label,
-        .status-row.pending .status-count {
-            color: #FFC107;
-        }
-
-        .status-row.processing .status-label,
-        .status-row.processing .status-count {
-            color: #2196F3;
-        }
-
-        .status-row.delivered .status-label,
-        .status-row.delivered .status-count {
-            color: #4CAF50;
-        }
-
-        /* HISTORY */
-        .history-section {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 40px 40px;
-        }
-
-        .history-card {
-            background: #fff;
-            border-radius: 12px;
-            padding: 20px 25px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-        }
-
-        .history-card h2 {
-            font-size: 18px;
-            font-weight: 900;
-            margin-bottom: 15px;
-            color: #222;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .history-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .history-table th {
-            text-align: left;
-            padding: 12px 14px;
-            background: #f5f5f5;
-            font-size: 12px;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-bottom: 2px solid #e0e0e0;
-        }
-
-        .history-table td {
-            padding: 12px 14px;
-            font-size: 13px;
-            border-bottom: 1px solid #f0f0f0;
-            color: #444;
-        }
-
-        .history-table tr:hover td {
-            background: #fafafa;
-        }
-
-        .history-empty {
-            text-align: center;
-            padding: 40px 20px;
-            color: #bbb;
-        }
-
-        .history-empty-icon {
-            font-size: 40px;
-            margin-bottom: 10px;
-        }
-
-        .status-pill {
-            display: inline-block;
-            padding: 3px 12px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .status-pill.pending {
-            background: #fff8e1;
-            color: #f57f17;
-        }
-
-        .status-pill.processing {
-            background: #e3f2fd;
-            color: #1565c0;
-        }
-
-        .status-pill.delivered {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-
-        .status-pill.draft {
-            background: #f5f5f5;
-            color: #666;
-        }
-
-        .status-pill.submitted {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-
-        .status-pill.approved {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-
-        .status-pill.rejected {
-            background: #ffebee;
-            color: #c62828;
-        }
+            .detail-thumb-upload {
+                width: 60px;
+                height: 60px;
+                border: 2px dashed #aaa;
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: all 0.2s;
+                background: #fafafa;
+                color: #999;
+                font-size: 22px;
+            }
+
+            .detail-thumb-upload:hover {
+                border-color: #2196F3;
+                color: #2196F3;
+                background: #e3f2fd;
+            }
+
+            .upload-label {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                margin-top: 10px;
+                padding: 6px 14px;
+                background: #e3f2fd;
+                color: #1976D2;
+                border-radius: 6px;
+                font-size: 12px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            .upload-label:hover {
+                background: #bbdefb;
+            }
+
+            .upload-label input[type="file"] {
+                display: none;
+            }
+
+            .detail-info-area {
+                flex: 1;
+                max-height: 750px;
+                overflow-y: auto;
+                padding-right: 15px;
+            }
     </style>
-</head>
-<div class="page active" id="pageHome">
-    <div class="top-bar">Concierge 2.0 - U&S Requisition System</div>
-    <div class="header-section">
-        <div class="header-content">
-            <div class="logo-text">CONCIERGE 2.0</div>
-            <div class="home-btn-group">
-                <button class="btn-create-request" onclick="startExistingStaffFlow()">Create New
-                    Request</button>
-                <button class="btn-joiner-kit" onclick="startNewJoinerFlow()">New Joiner Starter Kit<small>(No
-                        Approval Required)</small></button>
+ </head>
+ <body>
+    <!-- SHIRT LISTING -->
+        <div class="page" id="pageShirtList">
+            <div class="listing-banner">
+                <h1>Shirt Listing Page</h1>
+                <p>Select uniform items and add to your cart</p>
+            </div>
+            <div class="cart-badge" id="cartBadge" onclick="openDrawer()">🛒<span class="cart-count-badge"
+                    id="cartCountBadge">0</span></div>
+            <div class="listing-container">
+                <div class="particulars-summary" id="particularsSummary">
+                    <h3>✅ Your Particulars</h3>
+                    <div class="ps-grid" id="psGrid"></div><button class="btn-edit-particulars"
+                        onclick="navigateTo('existingForm')">✏️ Edit Particulars</button>
+                </div>
+                <div class="product-grid" id="productGrid"></div>
+                <div class="proceed-bar"><span class="cart-info" id="cartInfo">No items in cart</span><button
+                        class="btn-proceed" id="btnProceed" disabled onclick="navigateTo('reviewForm')">Proceed to
+                        Review
+                        →</button></div>
             </div>
         </div>
-    </div>
-    <div class="hero-banner">
-        <div class="hero-content">
-            <div class="hero-text">
-                <h1>Uniform and Safety Shirt Requisition System</h1>
-                <p>(Order your corporate shirt with ease)</p>
+ <!-- SHIRT DETAIL -->
+        <div class="page" id="pageShirtDetail">
+            <div class="detail-category-bar" id="detailCategoryBar">Shirt Category</div>
+            <div class="cart-badge" id="cartBadgeDetail" onclick="openDrawer()">🛒<span class="cart-count-badge"
+                    id="cartCountBadgeDetail">0</span></div>
+            <!-- Hidden file input for image uploads -->
+            <input type="file" id="mainImageUpload" accept="image/*" style="display:none;"
+                onchange="handleImageUpload(event)">
+            <div class="detail-container">
+                <h2 class="detail-title" id="detailTitle"></h2>
+                <div class="detail-layout">
+                    <div class="detail-image-area">
+                        <div class="detail-main-image" id="detailMainImage">
+                            <div id="detailMainPlaceholder"></div>
+                        </div>
+                        <div class="detail-thumbnails" id="detailThumbnails"></div>
+                        <div class="detail-footer" style="margin-top:20px;">
+                            <button class="btn-detail-back" onclick="navigateTo('shirtList')">← Back</button>
+                            <button class="btn-detail-add" onclick="addToCartFromDetail()"> Add </button>
+                        </div>
+                    </div>
 
-            </div>
-            <div class="hero-images">
-                <div class="shirt-placeholder vest" onclick="startExistingStaffFlow()"><br>Safety Vest</div>
-                <div class="shirt-placeholder beige" onclick="startExistingStaffFlow()"><br>Corporate</div>
-                <div class="shirt-placeholder dark" onclick="startExistingStaffFlow()"><br>PTG Shirt</div>
-            </div>
-        </div>
-    </div>
-    <div class="bottom-section">
-        <div class="category-section">
-            <h2>Search By Category:</h2>
-            <div class="category-grid">
-                <div class="category-card" onclick="startExistingStaffFlow('Technical Uniform')">
-                    <div class="card-img technical">🦺<br>Technical</div>
-                    <div class="card-label">Technical Shirts</div>
-                </div>
-                <div class="category-card" onclick="startExistingStaffFlow('Corporate Shirt')">
-                    <div class="card-img corporate">👔<br>Corporate</div>
-                    <div class="card-label">Corporate Shirts</div>
-                </div>
-                <div class="category-card" onclick="startExistingStaffFlow('PTG/Polo')">
-                    <div class="card-img ptg">👕<br>PTG</div>
-                    <div class="card-label">PTG/Polo Shirt</div>
-                </div>
-            </div>
-        </div>
-        <div class="status-section">
-            <div class="status-card">
-                <h2>My Request Status</h2>
-                <div class="status-row draft">
-                    <div class="status-left"><span class="status-icon">📝</span><span class="status-label">Draft</span>
-                    </div><span class="status-count" id="draftCount">0</span>
-                </div>
-                <div class="status-row pending">
-                    <div class="status-left"><span class="status-icon">⏳</span><span class="status-label">Pending
-                            Approval</span></div><span class="status-count" id="pendingCount">0</span>
-                </div>
-                <div class="status-row processing">
-                    <div class="status-left"><span class="status-icon">⚙️</span><span class="status-label">Processing By
-                            PIC</span></div><span class="status-count" id="processingCount">0</span>
-                </div>
-                <div class="status-row delivered">
-                    <div class="status-left"><span class="status-icon">✅</span><span
-                            class="status-label">Delivered</span></div><span class="status-count"
-                        id="deliveredCount">0</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="history-section">
-        <div class="history-card">
-            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
-                <h2>📋 Request History</h2>
-                <button onclick="clearAllData()"
-                    style="padding:6px 16px;border:1px solid #e57373;background:#fff;color:#e57373;border-radius:4px;cursor:pointer;font-size:12px;">🗑️
-                    Clear All Data</button>
-            </div>
-            <div id="historyContent">
-                <div class="history-empty">
-                    <div class="history-empty-icon">📭</div>
-                    <p>No requests yet.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+                    <div class="detail-info-area">
+                        <div class="detail-options">
+                            <div class="detail-identifier"><strong>Uniform Identifier:</strong> <span
+                                    id="detailIdText"></span></div>
 
-<body>
+                            <div class="detail-option-group" id="optNameOnShirt">
+                                <label>📝 Name On Shirt</label>
+                                <input type="text" id="detailNameOnShirt" placeholder="Enter name"
+                                    style="width:100%;max-width:300px;padding:9px 12px;border:2px solid #ddd;border-radius:6px;font-size:13px;outline:none;"
+                                    onfocus="this.style.borderColor='#2196F3'" onblur="this.style.borderColor='#ddd'">
+                            </div>
 
-</body>
+                            <div class="detail-option-group" id="optGender">
+                                <label>👤 Gender</label>
+                                <select id="detailGender" class="hem-select" style="max-width: 150px;">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
 
-</html>
+                            <div class="detail-option-group" id="optNoOfPair">
+                                <label>🔢 No of Pair</label>
+                                <select id="detailNoOfPair" class="hem-select" style="max-width: 80px;">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </div>
+
+                            <div class="detail-option-group" id="optSleeveSelect">
+                                <label>👔 Sleeve Type</label>
+                                <select id="detailSleeveSelect" class="hem-select" style="max-width: 250px;">
+                                    <option value="Male Short Sleeve">Male Short Sleeve</option>
+                                    <option value="Male Long Sleeve">Male Long Sleeve</option>
+                                    <option value="Female Short Sleeve">Female Short Sleeve</option>
+                                    <option value="Female Long Sleeve">Female Long Sleeve</option>
+                                </select>
+                            </div>
+
+                            <div class="detail-option-group" id="optSleeveToggle" style="display:none;">
+                                <label>👔 Sleeve</label>
+                                <div class="toggle-chip-row">
+                                    <button class="toggle-chip selected" onclick="pickToggle(this)">Short
+                                        Sleeve</button>
+                                    <button class="toggle-chip" onclick="pickToggle(this)">Long Sleeve</button>
+                                </div>
+                            </div>
+
+                            <div class="detail-option-group" id="optDeliveryLocation">
+                                <label>📍 Delivery Location</label>
+                                <select id="detailDeliveryLocation" class="hem-select" style="max-width: 100%;">
+                                    <option value="SARAWAK ENERGY BERHAD MENARA SARAWAK ENERGY">SARAWAK ENERGY BERHAD
+                                        MENARA
+                                        SARAWAK ENERGY</option>
+                                    <option value="KUCHING REGIONAL OFFICE">KUCHING REGIONAL OFFICE</option>
+                                    <option value="SIBU REGIONAL OFFICE">SIBU REGIONAL OFFICE</option>
+                                    <option value="BINTULU REGIONAL OFFICE">BINTULU REGIONAL OFFICE</option>
+                                    <option value="MIRI REGIONAL OFFICE">MIRI REGIONAL OFFICE</option>
+                                </select>
+                            </div>
+
+                            <div class="detail-option-group" id="optSize">
+                                <label>📏 Size</label>
+                                <div class="size-chip-row" id="detailSizeRow">
+                                    <button class="size-chip" onclick="pickDetailSize(this,'XS')">XS</button>
+                                    <button class="size-chip" onclick="pickDetailSize(this,'S')">S</button>
+                                    <button class="size-chip" onclick="pickDetailSize(this,'M')">M</button>
+                                    <button class="size-chip" onclick="pickDetailSize(this,'L')">L</button>
+                                    <button class="size-chip" onclick="pickDetailSize(this,'XL')">XL</button>
+                                    <button class="size-chip" onclick="pickDetailSize(this,'XXL')">XXL</button>
+                                    <button class="size-chip" onclick="pickDetailSize(this,'3XL')">3XL</button>
+                                    <button class="size-chip" onclick="pickDetailSize(this,'4XL')">4XL</button>
+                                    <button class="size-chip" onclick="pickDetailSize(this,'5XL')">5XL</button>
+                                    <button class="size-chip" onclick="pickDetailSize(this,'6XL')">6XL</button>
+                                </div>
+                            </div>
+
+                            <div class="detail-option-group" id="optPantSize">
+                                <label>👖 Pant Size (Inches)</label>
+                                <div class="size-chip-row" id="detailPantSizeRow"></div>
+                            </div>
+
+                            <div class="detail-option-group" id="optPantLength">
+                                <label>📏 Pants Length (Inches)</label>
+                                <input type="text" id="detailPantLength" placeholder="e.g. 31.5"
+                                    style="width:100%;max-width:150px;padding:9px 12px;border:2px solid #ddd;border-radius:6px;font-size:13px;outline:none;"
+                                    onfocus="this.style.borderColor='#2196F3'" onblur="this.style.borderColor='#ddd'">
+                            </div>
+
+                            <div class="detail-option-group" id="optColour">
+                                <label>🎨 Colour</label>
+                                <div class="colour-swatch-row" id="detailColourRow"></div>
+                            </div>
+
+                            <div class="detail-option-group" id="optHem">
+                                <label>📐 Hem</label>
+                                <select class="hem-select" id="detailHemLength">
+                                    <option value="">-- Select --</option>
+                                    <option value="standard">Standard</option>
+                                    <option value="short">Short</option>
+                                    <option value="long">Long</option>
+                                </select>
+                            </div>
+
+                            <div class="detail-option-group" id="optQty" style="display:none;">
+                                <label>🔢 Quantity</label>
+                                <div class="detail-qty-row">
+                                    <button class="detail-qty-btn" onclick="chgDetailQty(-1)">−</button>
+                                    <span class="detail-qty-val" id="detailQtyVal">1</span>
+                                    <button class="detail-qty-btn" onclick="chgDetailQty(1)">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+ </body>
+ </html>
+ 
