@@ -752,6 +752,16 @@
                 color: #c62828;
             }
 
+            .status-pill.pending-return {
+                background: #fff3e0;
+                color: #ef6c00;
+            }
+
+            .status-pill.returned {
+                background: #e0f2f1;
+                color: #00796b;
+            }
+
             /* FORM SHARED */
             .form-banner {
                 background: linear-gradient(135deg, #c8d83e, #a8c836, #7bb82e);
@@ -5688,6 +5698,7 @@
             let picAssignedQueue = JSON.parse(localStorage.getItem('picAssignedQueue') || '[]');
             let picUpdateHistory = JSON.parse(localStorage.getItem('picUpdateHistory') || '[]');
             let currentPICReqId = '';
+            let resumingDraftId = null;
 
             const stockData = [
                 { name: 'Corporate Shirt (Beige)', icon: '👔', qty: 45, threshold: 10 },
@@ -6083,8 +6094,8 @@
                 }
             }
 
-            function startExistingStaffFlow(category) { currentFlow = 'existingStaff'; cart = []; selectedCategory = category || ''; refreshCartUI(); setRequestMode('own'); navigateTo('existingForm'); }
-            function startNewJoinerFlow() { currentFlow = 'newJoiner'; checkoutCartAdded = false; navigateTo('newJoinerForm'); }
+            function startExistingStaffFlow(category) { resumingDraftId = null; currentFlow = 'existingStaff'; cart = []; selectedCategory = category || ''; refreshCartUI(); setRequestMode('own'); navigateTo('existingForm'); }
+            function startNewJoinerFlow() { resumingDraftId = null; currentFlow = 'newJoiner'; checkoutCartAdded = false; navigateTo('newJoinerForm'); }
 
             /* ============ VALIDATE EXISTING ============ */
             function validateExistingForm() {
@@ -6372,6 +6383,18 @@
                         closeModals(); bar.style.width = '0%';
                         const reqId = generateReqId(), total = cart.reduce((s, i) => s + i.quantity, 0), dateStr = formatDateTime(new Date());
                         document.getElementById('sucReqId').textContent = reqId; document.getElementById('sucName').textContent = serviceFormData.name; document.getElementById('sucItems').textContent = `${total} item(s)`; document.getElementById('sucDate').textContent = dateStr; document.getElementById('sucApprover').textContent = serviceFormData.supervisor;
+                        
+                        // If this was a draft, clean it up
+                        if (resumingDraftId) {
+                            requestHistory = requestHistory.filter(h => h.id !== resumingDraftId);
+                            localStorage.setItem('requestHistory', JSON.stringify(requestHistory));
+                            let drafts = JSON.parse(localStorage.getItem('drafts') || '{}');
+                            delete drafts[resumingDraftId];
+                            localStorage.setItem('drafts', JSON.stringify(drafts));
+                            if (counts.draft > 0) counts.draft--;
+                            resumingDraftId = null;
+                        }
+
                         addToHistory({ id: reqId, type: 'Existing Staff', items: cart.map(i => `${i.product}(${i.size})×${i.quantity}`).join(', '), itemCount: total, date: dateStr, status: 'pending' });
                         // Add to pending queue for LM/Exec
                         pendingQueue.push({ id: reqId, name: serviceFormData.name, staffNo: serviceFormData.staffNo, gender: serviceFormData.gender, department: serviceFormData.department, region: serviceFormData.region, designation: serviceFormData.designation, manager: serviceFormData.manager, contact: serviceFormData.contact, entitlement: serviceFormData.entitlement, serviceType: serviceFormData.serviceType, costCenter: serviceFormData.costCenter, glCode: serviceFormData.glCode, items: [...cart], itemCount: total, itemsSummary: cart.map(i => `${i.product}(${i.size})×${i.quantity}`).join(', '), date: dateStr, status: 'pending' });
@@ -6383,8 +6406,65 @@
             }
             function saveDraft() {
                 const reqId = generateReqId(), total = cart.reduce((s, i) => s + i.quantity, 0);
-                addToHistory({ id: reqId, type: 'Draft', items: cart.map(i => `${i.product}(${i.size})×${i.quantity}`).join(', '), itemCount: total, date: formatDateTime(new Date()), status: 'draft' });
-                counts.draft += 1; saveCounts(); showToast('💾 Saved!', '#4CAF50'); setTimeout(() => { cart = []; refreshCartUI(); navigateTo('home'); }, 1500);
+                const dateStr = formatDateTime(new Date());
+                const draftEntry = { id: reqId, type: 'Draft', items: cart.map(i => `${i.product}(${i.size})×${i.quantity}`).join(', '), itemCount: total, date: dateStr, status: 'draft' };
+                addToHistory(draftEntry);
+                
+                // Store actual draft content for resumption
+                let drafts = JSON.parse(localStorage.getItem('drafts') || '{}');
+                drafts[reqId] = {
+                    cart: [...cart],
+                    serviceFormData: { ...serviceFormData },
+                    currentFlow: currentFlow
+                };
+                localStorage.setItem('drafts', JSON.stringify(drafts));
+
+                counts.draft += 1; saveCounts(); 
+                showToast('💾 Draft Saved!', '#4CAF50'); 
+                setTimeout(() => { cart = []; serviceFormData = {}; refreshCartUI(); navigateTo('home'); }, 1500);
+            }
+
+            function resumeDraft(reqId) {
+                resumingDraftId = reqId;
+                let drafts = JSON.parse(localStorage.getItem('drafts') || '{}');
+                const draft = drafts[reqId];
+                if (!draft) { showToast('⚠️ Draft data not found', '#ff9800'); return; }
+
+                cart = [...draft.cart];
+                serviceFormData = { ...draft.serviceFormData };
+                currentFlow = draft.currentFlow || 'existingStaff';
+
+                // Populate form fields
+                if (currentFlow === 'existingStaff') {
+                    setRequestMode(serviceFormData.requestMode || 'own');
+                    if (serviceFormData.requestMode === 'onbehalf') {
+                        document.getElementById('efName').value = serviceFormData.name || '';
+                        document.getElementById('efStaffNo').value = serviceFormData.staffNo || '';
+                        document.getElementById('efGender').value = serviceFormData.gender || '';
+                        document.getElementById('efManager').value = serviceFormData.manager || '';
+                        document.getElementById('efSupervisor').value = serviceFormData.supervisor || '';
+                        document.getElementById('efEmail').value = serviceFormData.email || '';
+                        document.getElementById('efDesignation').value = serviceFormData.designation || '';
+                        document.getElementById('efDept').value = serviceFormData.department || '';
+                        document.getElementById('efRegion').value = serviceFormData.region || '';
+                    }
+                    document.getElementById('efContact').value = serviceFormData.contact || '';
+                    document.getElementById('efRemarks').value = serviceFormData.remarks || '';
+                    
+                    // Trigger GL update
+                    if (serviceFormData.costCenter) {
+                        document.getElementById('efCostCenter').value = serviceFormData.costCenter;
+                        autopopulateGL('existing');
+                    }
+                }
+
+                refreshCartUI();
+                if (cart.length > 0) {
+                    navigateTo('shirtList');
+                } else {
+                    navigateTo('existingForm');
+                }
+                showToast('📂 Draft Resumed', '#4CAF50');
             }
 
             /* ============ NEW JOINER CHECKOUT ============ */
@@ -6400,6 +6480,18 @@
                     const kit = starterKits[newJoinerFormData.kitType]; const typeLabel = newJoinerFormData.kitType === 'newJoinerTech' ? 'New Joiner (Tech)' : 'New Joiner';
                     document.getElementById('checkoutModalMsg').textContent = `Request for ${newJoinerFormData.joinerName} submitted directly to PIC at ${newJoinerFormData.region}. (No approval required)`;
                     const dateStr = formatDateTime(new Date());
+
+                    // If this was a draft, clean it up
+                    if (resumingDraftId) {
+                        requestHistory = requestHistory.filter(h => h.id !== resumingDraftId);
+                        localStorage.setItem('requestHistory', JSON.stringify(requestHistory));
+                        let drafts = JSON.parse(localStorage.getItem('drafts') || '{}');
+                        delete drafts[resumingDraftId];
+                        localStorage.setItem('drafts', JSON.stringify(drafts));
+                        if (counts.draft > 0) counts.draft--;
+                        resumingDraftId = null;
+                    }
+
                     addToHistory({ id: reqId, type: typeLabel, items: kit.map(i => `${i.name}(${i.qty})`).join(', '), itemCount: kit.length, date: dateStr, status: 'processing' });
 
                     // New Joiner bypasses LM/Exec → goes directly to PIC queue
@@ -6445,11 +6537,13 @@
             function renderHistory() {
                 const c = document.getElementById('historyContent');
                 if (requestHistory.length === 0) { c.innerHTML = '<div class="history-empty"><div class="history-empty-icon">📭</div><p>No requests yet.</p></div>'; return; }
-                const labels = { draft: 'Draft', pending: 'Pending Approval', processing: 'Processing', delivered: 'Delivered', submitted: 'Submitted', approved: 'Approved', rejected: 'Rejected' };
+                const labels = { draft: 'Draft', pending: 'Pending Approval', processing: 'Processing', delivered: 'Delivered', submitted: 'Submitted', approved: 'Approved', rejected: 'Rejected', 'pending-return': 'Pending Return', 'returned': 'Item Returned' };
                 let html = '<table class="history-table"><thead><tr><th>Request ID</th><th>Type</th><th>Items</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
                 requestHistory.forEach(r => {
                     let actions = '—';
-                    if (r.status === 'delivered') {
+                    if (r.status === 'draft') {
+                        actions = `<div class="history-actions"><button class="btn-history-action feedback" onclick="resumeDraft('${r.id}')">📂 Resume</button></div>`;
+                    } else if (r.status === 'delivered') {
                         const hasFeedback = r.feedbackSubmitted;
                         actions = `<div class="history-actions">`;
                         if (hasFeedback) {
@@ -6470,7 +6564,7 @@
             function confirmClearAllData() {
                 requestHistory = []; pendingQueue = []; lmActionHistory = []; execActionHistory = []; picAssignedQueue = []; picUpdateHistory = [];
                 counts = { draft: 0, pending: 0, processing: 0, delivered: 0 }; lmStats = { pending: 0, approved: 0, rejected: 0 }; execStats = { pending: 0, approved: 0, rejected: 0 };
-                ['requestHistory', 'pendingQueue', 'lmActionHistory', 'execActionHistory', 'usCounts', 'lmStats', 'execStats', 'picAssignedQueue', 'picUpdateHistory'].forEach(k => localStorage.removeItem(k));
+                ['requestHistory', 'pendingQueue', 'lmActionHistory', 'execActionHistory', 'usCounts', 'lmStats', 'execStats', 'picAssignedQueue', 'picUpdateHistory', 'drafts'].forEach(k => localStorage.removeItem(k));
                 closeModals();
                 refreshCounts(); renderHistory(); refreshLMDashboard(); refreshExecDashboard(); refreshPICDashboard(); updateNotifDots();
                 showToast('🗑️ All data cleared successfully!', '#666');
@@ -6535,18 +6629,49 @@
                     container.innerHTML = '<div class="history-empty"><div class="history-empty-icon">✅</div><p>No assigned requests. All clear!</p></div>';
                     return;
                 }
-                const statusLabels = { pending: 'Pending', processing: 'Processing', delivered: 'Delivered' };
+                const statusLabels = { pending: 'Pending', processing: 'Processing', delivered: 'Delivered', 'return-pending': 'Return Pending' };
                 container.innerHTML = `<table class="pic-req-table">
         <thead><tr><th>Request ID</th><th>Staff</th><th>Items</th><th>Location</th><th>Status</th><th>Action</th></tr></thead>
-        <tbody>${queue.map(r => `<tr>
+        <tbody>${queue.map(r => {
+                    let actionBtn = `<button class="btn-update-items" onclick="openPICItemUpdate('${r.id}')">Update Items</button>`;
+                    if (r.picStatus === 'return-pending') {
+                        actionBtn = `<button class="btn-update-items" style="background:#ff9800; border-color:#e65100;" onclick="receiveReturn('${r.id}')">Receive Item</button>`;
+                    }
+                    return `<tr>
             <td><strong>${r.id}</strong></td>
             <td>${r.name}</td>
             <td>${r.itemCount} item(s)</td>
             <td>📍 ${r.region}</td>
-            <td><span class="status-pill ${r.picStatus}">${statusLabels[r.picStatus] || 'Pending'}</span></td>
-            <td><button class="btn-update-items" onclick="openPICItemUpdate('${r.id}')">Update Items</button></td>
-        </tr>`).join('')}</tbody>
+            <td><span class="status-pill ${r.picStatus}">${statusLabels[r.picStatus] || r.picStatus}</span></td>
+            <td>${actionBtn}</td>
+        </tr>`}).join('')}</tbody>
     </table>`;
+            }
+
+            function receiveReturn(reqId) {
+                const req = picAssignedQueue.find(r => r.id === reqId);
+                if (!req) return;
+                
+                req.picStatus = 'returned';
+                localStorage.setItem('picAssignedQueue', JSON.stringify(picAssignedQueue));
+                
+                // Update history for staff
+                const histEntry = requestHistory.find(r => r.id === reqId);
+                if (histEntry) {
+                    histEntry.status = 'returned';
+                    localStorage.setItem('requestHistory', JSON.stringify(requestHistory));
+                }
+                
+                picUpdateHistory.unshift({
+                    id: reqId, name: req.name, status: 'returned',
+                    details: `Faulty item received by PIC for replacement`,
+                    date: formatDateTime(new Date())
+                });
+                localStorage.setItem('picUpdateHistory', JSON.stringify(picUpdateHistory));
+                
+                refreshPICDashboard();
+                renderHistory();
+                showToast('✅ Item marked as Received by PIC', '#00897B');
             }
 
             function renderPICHistory() {
@@ -6789,23 +6914,52 @@
                 if (!justification) { showToast('⚠️ Provide justification', '#ff9800'); return; }
 
                 const returnId = `RET-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 99999)).padStart(5, '0')}`;
+                const dateStr = formatDateTime(new Date());
+
+                // Get original request details if possible
+                const originalReq = requestHistory.find(r => r.id === currentReturnReqId);
+                const picReq = picAssignedQueue.find(r => r.id === currentReturnReqId);
+                let productDesc = 'Uniform Item';
+                if (picReq && picReq.items[itemIdx]) {
+                    productDesc = picReq.items[itemIdx].product;
+                } else if (originalReq) {
+                    productDesc = originalReq.items;
+                }
 
                 // Add return to history
-                addToHistory({
+                const returnEntry = {
                     id: returnId,
                     type: 'Return/Replace',
-                    items: `Return for ${currentReturnReqId}: ${reason}`,
+                    items: `Return for ${currentReturnReqId}: ${productDesc}`,
                     itemCount: 1,
-                    date: formatDateTime(new Date()),
-                    status: 'pending'
+                    date: dateStr,
+                    status: 'pending-return',
+                    reason: reason,
+                    justification: justification
+                };
+                addToHistory(returnEntry);
+                
+                // ADD TO PIC QUEUE so they can receive it
+                picAssignedQueue.push({
+                    id: returnId,
+                    name: (picReq ? picReq.name : (originalReq ? originalReq.name : 'George Lopez')),
+                    staffNo: (picReq ? picReq.staffNo : (originalReq ? originalReq.staffNo : 'TEST02026')),
+                    itemCount: 1,
+                    itemsSummary: `Return: ${productDesc}`,
+                    region: (picReq ? picReq.region : (serviceFormData.region || 'Menara SEB - HQ')),
+                    picStatus: 'return-pending',
+                    date: dateStr,
+                    items: [{ product: productDesc, icon: '🔄', quantity: 1, itemStatus: 'awaiting-return' }]
                 });
+                localStorage.setItem('picAssignedQueue', JSON.stringify(picAssignedQueue));
+
                 counts.pending = (counts.pending || 0) + 1;
                 saveCounts();
                 refreshCounts();
 
                 closeModals();
                 renderHistory();
-                showActionSuccess('🔄', 'Return Request Submitted', `Return request ${returnId} has been submitted for review. Reason: ${reason}`);
+                showActionSuccess('🔄', 'Return Request Submitted', `Return request ${returnId} has been submitted. Please hand over the item to your regional PIC for replacement processing.`);
             }
         </script>
         <!-- SIZING CHART MODAL -->
